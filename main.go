@@ -203,6 +203,11 @@ type newTeam struct {
 	AdminName string `json:"admin_name"`
 }
 
+type renameTeam struct {
+	OldTeamName string `json:"old_team_name"`
+	NewTeamName string `json:"new_team_name"`
+}
+
 type teamToDel struct {
 	TeamName string `json:"team_name"`
 }
@@ -244,6 +249,52 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			}
 		}
 	case "POST":
+		var renameTeamData renameTeam
+		errDecode := json.NewDecoder(requ.Body).Decode(&renameTeamData)
+		if errDecode != nil {
+			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
+			return
+		} else {
+			oldTeamNamePath := dbPathWithName(
+				*dbStorePath,
+				teamFilename(renameTeamData.OldTeamName),
+			)
+			newTeamNamePath := dbPathWithName(
+				*dbStorePath,
+				teamFilename(renameTeamData.NewTeamName),
+			)
+			oldTeamPathExist, errCheckExist := dbExist(oldTeamNamePath)
+			if errCheckExist != nil {
+				http.Error(
+					resWri,
+					errDecode.Error(),
+					http.StatusBadRequest,
+				)
+				return
+			} else {
+				if oldTeamPathExist {
+					errRename := os.Rename(
+						oldTeamNamePath,
+						newTeamNamePath,
+					)
+					if errRename != nil {
+						http.Error(
+							resWri,
+							errDecode.Error(),
+							http.StatusBadRequest,
+						)
+						return
+					}
+				} else {
+					http.Error(
+						resWri,
+						fmt.Sprintf("There is no file '%v' to rename", oldTeamNamePath),
+						http.StatusBadRequest,
+					)
+					return
+				}
+			}
+		}
 	case "DELETE":
 		var teamToDelData teamToDel
 		errDecode := json.NewDecoder(requ.Body).Decode(&teamToDelData)
@@ -305,7 +356,6 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 		)
 		return
 	}
-
 }
 
 var router = mux.NewRouter().StrictSlash(true)
