@@ -53,15 +53,19 @@ var dbInitQueries = map[string]string{
 }
 
 var dbModQueries = map[string]string{
-	"add1stAdmin":  ``,
-	"addMember":    ``,
-	"updateMember": ``,
-	"deleteMember": ``,
-	"listMembers":  `SELECT * FROM members;`,
-	"addOrder":     ``,
-	"updateOrder":  ``,
-	"deleteOrder":  ``,
-	"listOrders":   `SELECT * FROM orders;`,
+	"add1stAdmin":        ``,
+	"addMember":          ``,
+	"updateMember":       ``,
+	"deleteMember":       ``,
+	"listMembers":        `SELECT * FROM members;`,
+	"addOrder":           ``,
+	"updateOrder":        ``,
+	"deleteOrder":        ``,
+	"listOrders":         `SELECT * FROM orders;`,
+	"addOrderDetails":    ``,
+	"updateOrderDetails": ``,
+	"deleteOrderDetails": ``,
+	"listOrdersDetails":  `SELECT * FROM orders_details;`,
 }
 
 type Money int32
