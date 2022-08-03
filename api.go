@@ -58,22 +58,43 @@ func docpageHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("docpageHandler called")
 }
 
-type MemberApi struct {
+type teamRequest struct {
 	Team string `json:"team"`
+}
+
+type updateMember struct {
+	teamRequest
 	Member
 }
+type addMember updateMember
 
 func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("membersHandler called")
-	var newMembererData MemberApi
+
 	switch requ.Method {
 	case "PUT":
+		var newMembererData updateMember
 		errDecode := json.NewDecoder(requ.Body).Decode(&newMembererData)
 		if errDecode != nil {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 			return
 		} else {
 			fmt.Println(fmt.Sprintf("Received new member data: %v", newMembererData))
+		}
+	case "GET":
+		var tr teamRequest
+		errDecode := json.NewDecoder(requ.Body).Decode(&tr)
+		if errDecode != nil {
+			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
+			return
+		} else {
+			fmt.Println(fmt.Sprintf("Received request for members of: %v", tr))
+			mb, errMb := listMembers(tr.Team)
+			if errMb != nil {
+				http.Error(resWri, errMb.Error(), http.StatusBadRequest)
+				return
+			}
+			resWri.Write([]byte(fmt.Sprintf("%v", mb)))
 		}
 	}
 }
@@ -96,7 +117,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 			return
 		} else {
-			errInit := initTeamDatabase(*dbStorePath, newTeamData.TeamName)
+			errInit := initTeamDatabase(newTeamData.TeamName)
 			if errInit != nil {
 				http.Error(
 					resWri,

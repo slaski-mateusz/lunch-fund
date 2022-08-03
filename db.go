@@ -46,20 +46,34 @@ var dbInitQueries = map[string]string{
 		FOREIGN KEY (creditor_id) REFERENCES members (id) ON UPDATE CASCADE ON DELETE RESTRICT)`,
 }
 
-var dbModQueries = map[string]string{
-	"add1stAdmin":        ``,
-	"addMember":          ``,
-	"updateMember":       ``,
-	"deleteMember":       ``,
-	"listMembers":        `SELECT * FROM members;`,
-	"addOrder":           ``,
-	"updateOrder":        ``,
-	"deleteOrder":        ``,
-	"listOrders":         `SELECT * FROM orders;`,
-	"addOrderDetails":    ``,
-	"updateOrderDetails": ``,
-	"deleteOrderDetails": ``,
-	"listOrdersDetails":  `SELECT * FROM orders_details;`,
+var dbModQueries = struct {
+	add1stAdmin        string
+	addMember          string
+	updateMember       string
+	deleteMember       string
+	listMembers        string
+	addOrder           string
+	updateOrder        string
+	deleteOrder        string
+	listOrders         string
+	addOrderDetails    string
+	updateOrderDetails string
+	deleteOrderDetails string
+	listOrdersDetails  string
+}{
+	add1stAdmin:        ``,
+	addMember:          ``,
+	updateMember:       ``,
+	deleteMember:       ``,
+	listMembers:        `SELECT * FROM members;`,
+	addOrder:           ``,
+	updateOrder:        ``,
+	deleteOrder:        ``,
+	listOrders:         `SELECT * FROM orders;`,
+	addOrderDetails:    ``,
+	updateOrderDetails: ``,
+	deleteOrderDetails: ``,
+	listOrdersDetails:  `SELECT * FROM orders_details;`,
 }
 
 type Money int32
@@ -120,9 +134,9 @@ func dbExist(dbFilePath string) (bool, error) {
 	return false, err
 }
 
-func initTeamDatabase(dbStorePath string, teamName string) error {
+func initTeamDatabase(teamName string) error {
 	dbFilePath := dbPathWithName(
-		dbStorePath,
+		*dbStorePath,
 		teamFilename(teamName),
 	)
 	if dbe, _ := dbExist(dbFilePath); !dbe {
@@ -161,4 +175,36 @@ func listTeams(dbStorePath string) []string {
 		}
 	}
 	return teamDatabases
+}
+
+func listMembers(teamName string) ([]Member, error) {
+	fmt.Println(teamName)
+	dbFilePath := dbPathWithName(
+		*dbStorePath,
+		teamFilename(teamName),
+	)
+	dbe, errExist := dbExist(dbFilePath)
+	if errExist != nil {
+		return nil, errExist
+	}
+	if dbe {
+		db, err := sql.Open("sqlite3", dbFilePath)
+		defer db.Close()
+		if err != nil {
+			return nil, err
+		}
+		query := dbModQueries.listMembers
+		dbCursor, errPre := db.Prepare(query)
+		if errPre != nil {
+			return nil, errPre
+		}
+		data, errExe := dbCursor.Exec()
+		if errExe != nil {
+			return nil, errExe
+		}
+		fmt.Println(data.RowsAffected())
+		mm := []Member{}
+		return mm, nil
+	}
+	return nil, errors.New("Unknown problem when getting members from database")
 }
