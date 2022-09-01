@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+
+	"github.com/slaski-mateusz/lunch-fund/api"
 )
 
 var dbStorePath *string
@@ -38,7 +40,7 @@ func main() {
 		srvInt.host,
 		srvInt.port,
 	))
-	handleRequests(
+	api.HandleRequests(
 		srvInt.host,
 		uint(srvInt.port),
 	)

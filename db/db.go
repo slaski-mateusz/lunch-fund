@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"database/sql"
@@ -12,6 +12,8 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+var databases map[string]*sql.DB
 
 var dbInitQueries = map[string]string{
 	"activateForeginKeys": "PRAGMA foreign_keys = ON;",
@@ -47,33 +49,33 @@ var dbInitQueries = map[string]string{
 }
 
 var dbModQueries = struct {
-	add1stAdmin        string
-	addMember          string
-	updateMember       string
-	deleteMember       string
-	listMembers        string
-	addOrder           string
-	updateOrder        string
-	deleteOrder        string
-	listOrders         string
-	addOrderDetails    string
-	updateOrderDetails string
-	deleteOrderDetails string
-	listOrdersDetails  string
+	add1stAdminQ        string
+	addMemberQ          string
+	updateMemberQ       string
+	deleteMemberQ       string
+	listMembersQ        string
+	addOrderQ           string
+	updateOrderQ        string
+	deleteOrderQ        string
+	listOrdersQ         string
+	addOrderDetailsQ    string
+	updateOrderDetailsQ string
+	deleteOrderDetailsQ string
+	listOrdersDetailsQ  string
 }{
-	add1stAdmin:        ``,
-	addMember:          ``,
-	updateMember:       ``,
-	deleteMember:       ``,
-	listMembers:        `SELECT * FROM members;`,
-	addOrder:           ``,
-	updateOrder:        ``,
-	deleteOrder:        ``,
-	listOrders:         `SELECT * FROM orders;`,
-	addOrderDetails:    ``,
-	updateOrderDetails: ``,
-	deleteOrderDetails: ``,
-	listOrdersDetails:  `SELECT * FROM orders_details;`,
+	add1stAdminQ:        ``,
+	addMemberQ:          ``,
+	updateMemberQ:       ``,
+	deleteMemberQ:       ``,
+	listMembersQ:        `SELECT * FROM members;`,
+	addOrderQ:           ``,
+	updateOrderQ:        ``,
+	deleteOrderQ:        ``,
+	listOrdersQ:         `SELECT * FROM orders;`,
+	addOrderDetailsQ:    ``,
+	updateOrderDetailsQ: ``,
+	deleteOrderDetailsQ: ``,
+	listOrdersDetailsQ:  `SELECT * FROM orders_details;`,
 }
 
 type Money int32
@@ -109,11 +111,11 @@ type Debt struct {
 	ReturnTimestamp Timestamp
 }
 
-func teamFilename(teamName string) string {
+func TeamFilename(teamName string) string {
 	return fmt.Sprintf("team_%v.db", teamName)
 }
 
-func dbPathWithName(dbPath string, dbName string) string {
+func DbPathWithName(dbPath string, dbName string) string {
 	return strings.Join(
 		[]string{
 			dbPath,
@@ -123,7 +125,7 @@ func dbPathWithName(dbPath string, dbName string) string {
 	)
 }
 
-func dbExist(dbFilePath string) (bool, error) {
+func DbExist(dbFilePath string) (bool, error) {
 	_, err := os.Stat(dbFilePath)
 	if err == nil {
 		return true, nil
@@ -134,19 +136,27 @@ func dbExist(dbFilePath string) (bool, error) {
 	return false, err
 }
 
-func initTeamDatabase(teamName string) error {
-	dbFilePath := dbPathWithName(
+func connectDB(teamName string) error {
+	dbFilePath := DbPathWithName(
 		*dbStorePath,
-		teamFilename(teamName),
+		TeamFilename(teamName),
 	)
-	if dbe, _ := dbExist(dbFilePath); !dbe {
-		db, err := sql.Open("sqlite3", dbFilePath)
-		defer db.Close()
+	if dbe, _ := DbExist(dbFilePath); dbe {
+		var err error
+		databases[teamName], err = sql.Open("sqlite3", dbFilePath)
+		defer databases[teamName].Close()
 		if err != nil {
 			return err
 		}
+	}
+	return nil
+
+}
+
+func InitTeamDatabase(teamName string) error {
+	if dbc, ok := databases[teamName]; ok {
 		for _, initQuery := range dbInitQueries {
-			dbCursor, errPre := db.Prepare(initQuery)
+			dbCursor, errPre := dbc.Prepare(initQuery)
 			if errPre != nil {
 				return errPre
 			}
@@ -155,15 +165,10 @@ func initTeamDatabase(teamName string) error {
 				return errExe
 			}
 		}
-	} else {
-		return errors.New(
-			fmt.Sprintf("Database file '%v' already exist", dbFilePath),
-		)
 	}
 	return nil
 }
-
-func listTeams(dbStorePath string) []string {
+func ListTeams(dbStorePath string) []string {
 	files, err := ioutil.ReadDir(dbStorePath)
 	if err != nil {
 		log.Fatal(err)
@@ -177,13 +182,13 @@ func listTeams(dbStorePath string) []string {
 	return teamDatabases
 }
 
-func listMembers(teamName string) ([]Member, error) {
-	fmt.Println(teamName)
-	dbFilePath := dbPathWithName(
+func ListMembers(teamName string) ([]Member, error) {
+	// fmt.Println(teamName)
+	dbFilePath := DbPathWithName(
 		*dbStorePath,
-		teamFilename(teamName),
+		TeamFilename(teamName),
 	)
-	dbe, errExist := dbExist(dbFilePath)
+	dbe, errExist := DbExist(dbFilePath)
 	if errExist != nil {
 		return nil, errExist
 	}
@@ -193,7 +198,7 @@ func listMembers(teamName string) ([]Member, error) {
 		if err != nil {
 			return nil, err
 		}
-		query := dbModQueries.listMembers
+		query := dbModQueries.listMembersQ
 		dbCursor, errPre := db.Prepare(query)
 		if errPre != nil {
 			return nil, errPre
@@ -207,4 +212,9 @@ func listMembers(teamName string) ([]Member, error) {
 		return mm, nil
 	}
 	return nil, errors.New("Unknown problem when getting members from database")
+}
+
+func AddNewMember(team string, newMember string) error {
+	// TODO: adding new member to database
+	return errors.New("Unknown problem when adding member to database")
 }

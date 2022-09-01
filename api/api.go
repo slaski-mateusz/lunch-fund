@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"encoding/json"
@@ -9,6 +9,8 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+
+	"github.com/slaski-mateusz/lunch-fund/db"
 )
 
 type ApiNode struct {
@@ -64,8 +66,9 @@ type teamRequest struct {
 
 type updateMember struct {
 	teamRequest
-	Member
+	db.Member
 }
+
 type addMember updateMember
 
 func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
@@ -80,6 +83,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			return
 		} else {
 			fmt.Println(fmt.Sprintf("Received new member data: %v", newMembererData))
+			// TODO: adding member
 		}
 	case "GET":
 		var tr teamRequest
@@ -89,7 +93,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			return
 		} else {
 			fmt.Println(fmt.Sprintf("Received request for members of: %v", tr))
-			mb, errMb := listMembers(tr.Team)
+			mb, errMb := db.ListMembers(tr.Team)
 			if errMb != nil {
 				http.Error(resWri, errMb.Error(), http.StatusBadRequest)
 				return
@@ -117,7 +121,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 			return
 		} else {
-			errInit := initTeamDatabase(newTeamData.TeamName)
+			errInit := db.InitTeamDatabase(newTeamData.TeamName)
 			if errInit != nil {
 				http.Error(
 					resWri,
@@ -134,15 +138,15 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 			return
 		} else {
-			oldTeamNamePath := dbPathWithName(
+			oldTeamNamePath := db.DbPathWithName(
 				*dbStorePath,
-				teamFilename(renameTeamData.OldTeamName),
+				db.TeamFilename(renameTeamData.OldTeamName),
 			)
-			newTeamNamePath := dbPathWithName(
+			newTeamNamePath := db.DbPathWithName()(
 				*dbStorePath,
-				teamFilename(renameTeamData.NewTeamName),
+				db.TeamFilename(renameTeamData.NewTeamName),
 			)
-			oldTeamPathExist, errCheckExist := dbExist(oldTeamNamePath)
+			oldTeamPathExist, errCheckExist := db.DbExist(oldTeamNamePath)
 			if errCheckExist != nil {
 				http.Error(
 					resWri,
@@ -185,11 +189,11 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			)
 			return
 		} else {
-			teamToDelPath := dbPathWithName(
+			teamToDelPath := db.DbPathWithName(
 				*dbStorePath,
-				teamFilename(teamToDelData.TeamName),
+				db.TeamFilename(teamToDelData.TeamName),
 			)
-			dbToDelExist, errCheckExist := dbExist(teamToDelPath)
+			dbToDelExist, errCheckExist := db.DbExist(teamToDelPath)
 			if errCheckExist != nil {
 				http.Error(
 					resWri,
@@ -221,7 +225,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 		}
 	default:
 		var teamsNames []string
-		for _, teamFilename := range listTeams(*dbStorePath) {
+		for _, teamFilename := range db.ListTeams(*dbStorePath) {
 			teamName := strings.TrimSuffix(
 				strings.TrimPrefix(
 					teamFilename,
@@ -255,8 +259,8 @@ func activateApiNode(in_uri string, node *ApiNode) {
 	}
 }
 
-func handleRequests(net_intf string, net_port uint) {
+func HandleRequests(netIntf string, netPort uint) {
 	activateApiNode("", apiStructure)
-	webIntf := fmt.Sprintf("%v:%v", net_intf, net_port)
+	webIntf := fmt.Sprintf("%v:%v", netIntf, netPort)
 	log.Fatal(http.ListenAndServe(webIntf, router))
 }
