@@ -5,24 +5,23 @@ import (
 	"fmt"
 
 	"github.com/slaski-mateusz/lunch-fund/api"
+	"github.com/slaski-mateusz/lunch-fund/db"
 )
 
-var dbStorePath *string
-
 func main() {
-	dbStorePath = flag.String(
+	db.DbStorePath = flag.String(
 		"dbStorage",
 		"",
 		"Location of teams databases",
 	)
 	flag.Parse()
 	dbStoreInd := "application local"
-	if *dbStorePath == "" || *dbStorePath == "." {
-		if *dbStorePath == "" {
-			*dbStorePath = "."
+	if *db.DbStorePath == "" || *db.DbStorePath == "." {
+		if *db.DbStorePath == "" {
+			*db.DbStorePath = "."
 		}
 	} else {
-		dbStoreInd = *dbStorePath
+		dbStoreInd = *db.DbStorePath
 	}
 	srvInt := struct {
 		host string

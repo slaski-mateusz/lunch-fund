@@ -42,6 +42,8 @@ var apiStructure = &ApiNode{
 	},
 }
 
+// Teams
+
 type newTeam struct {
 	TeamName  string `json:"team_name"`
 	AdminName string `json:"admin_name"`
@@ -55,6 +57,12 @@ type renameTeam struct {
 type teamToDel struct {
 	TeamName string `json:"team_name"`
 }
+
+// Members
+
+// Orders
+
+// Debts
 
 func docpageHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("docpageHandler called")
@@ -139,11 +147,11 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			return
 		} else {
 			oldTeamNamePath := db.DbPathWithName(
-				*dbStorePath,
+				*db.DbStorePath,
 				db.TeamFilename(renameTeamData.OldTeamName),
 			)
-			newTeamNamePath := db.DbPathWithName()(
-				*dbStorePath,
+			newTeamNamePath := db.DbPathWithName(
+				*db.DbStorePath,
 				db.TeamFilename(renameTeamData.NewTeamName),
 			)
 			oldTeamPathExist, errCheckExist := db.DbExist(oldTeamNamePath)
@@ -190,7 +198,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			return
 		} else {
 			teamToDelPath := db.DbPathWithName(
-				*dbStorePath,
+				*db.DbStorePath,
 				db.TeamFilename(teamToDelData.TeamName),
 			)
 			dbToDelExist, errCheckExist := db.DbExist(teamToDelPath)
@@ -225,7 +233,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 		}
 	default:
 		var teamsNames []string
-		for _, teamFilename := range db.ListTeams(*dbStorePath) {
+		for _, teamFilename := range db.ListTeams(*db.DbStorePath) {
 			teamName := strings.TrimSuffix(
 				strings.TrimPrefix(
 					teamFilename,

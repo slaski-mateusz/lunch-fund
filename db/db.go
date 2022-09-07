@@ -13,6 +13,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+var DbStorePath *string
 var databases map[string]*sql.DB
 
 var dbInitQueries = map[string]string{
@@ -98,7 +99,7 @@ type Order struct {
 	tipCost      Money
 }
 
-type OrderDetail struct {
+type OrderMember struct {
 	OrderId  int64
 	MemberId int64
 	Amount   Money
@@ -138,7 +139,7 @@ func DbExist(dbFilePath string) (bool, error) {
 
 func connectDB(teamName string) error {
 	dbFilePath := DbPathWithName(
-		*dbStorePath,
+		*DbStorePath,
 		TeamFilename(teamName),
 	)
 	if dbe, _ := DbExist(dbFilePath); dbe {
@@ -152,6 +153,8 @@ func connectDB(teamName string) error {
 	return nil
 
 }
+
+// Teams
 
 func InitTeamDatabase(teamName string) error {
 	if dbc, ok := databases[teamName]; ok {
@@ -168,8 +171,9 @@ func InitTeamDatabase(teamName string) error {
 	}
 	return nil
 }
-func ListTeams(dbStorePath string) []string {
-	files, err := ioutil.ReadDir(dbStorePath)
+
+func ListTeams() []string {
+	files, err := ioutil.ReadDir(*DbStorePath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -182,10 +186,21 @@ func ListTeams(dbStorePath string) []string {
 	return teamDatabases
 }
 
+func RenameTeam() error {
+	// TODO: Reanaming Team
+	return errors.New("Error when renaming team")
+}
+
+func DeleteTeam() error {
+	// TODO: Deleting Team
+	return errors.New("Error when deleting team")
+}
+
+// Members
+
 func ListMembers(teamName string) ([]Member, error) {
-	// fmt.Println(teamName)
 	dbFilePath := DbPathWithName(
-		*dbStorePath,
+		*DbStorePath,
 		TeamFilename(teamName),
 	)
 	dbe, errExist := DbExist(dbFilePath)
@@ -214,7 +229,39 @@ func ListMembers(teamName string) ([]Member, error) {
 	return nil, errors.New("Unknown problem when getting members from database")
 }
 
-func AddNewMember(team string, newMember string) error {
+func AddMember(team string, newMember Member) error {
 	// TODO: adding new member to database
 	return errors.New("Unknown problem when adding member to database")
+}
+
+func UpdateMember(team string, memberData Member) error {
+	// TODO: update member data
+	return errors.New("Unknown problem when updating member in database")
+}
+
+func DeleteMember(team string, memberData Member) error {
+	// TODO: delete member from team
+	return errors.New("Unknown problem when delete member from database")
+}
+
+// Orders
+
+func ListOrders(team string) error {
+	// TODO: Listing orders
+	return errors.New("Unknown problem when listing orders")
+}
+
+func AddOrder(team string, newOrder Order) error {
+	// TODO: adding new order to database
+	return errors.New("Unknown problem when adding order to database")
+}
+
+func AddOrder(team string, newOrder Order) error {
+	// TODO: adding new order to database
+	return errors.New("Unknown problem when adding order to database")
+}
+
+func AddOrder(team string, newOrder Order) error {
+	// TODO: adding new order to database
+	return errors.New("Unknown problem when adding order to database")
 }
