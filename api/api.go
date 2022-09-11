@@ -11,6 +11,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/slaski-mateusz/lunch-fund/db"
+	"github.com/slaski-mateusz/lunch-fund/model"
 )
 
 type ApiNode struct {
@@ -42,71 +43,42 @@ var apiStructure = &ApiNode{
 	},
 }
 
-// Teams
-
-type newTeam struct {
-	TeamName  string `json:"team_name"`
-	AdminName string `json:"admin_name"`
-}
-
-type renameTeam struct {
-	OldTeamName string `json:"old_team_name"`
-	NewTeamName string `json:"new_team_name"`
-}
-
-type teamToDel struct {
-	TeamName string `json:"team_name"`
-}
-
-// Members
-
-// Orders
-
-// Debts
+// Teams types
 
 func docpageHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("docpageHandler called")
 }
 
-type teamRequest struct {
-	Team string `json:"team"`
-}
-
-type updateMember struct {
-	teamRequest
-	db.Member
-}
-
-type addMember updateMember
+// Handlers
 
 func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("membersHandler called")
 
 	switch requ.Method {
-	case "PUT":
-		var newMembererData updateMember
-		errDecode := json.NewDecoder(requ.Body).Decode(&newMembererData)
-		if errDecode != nil {
-			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
-			return
-		} else {
-			fmt.Println(fmt.Sprintf("Received new member data: %v", newMembererData))
-			// TODO: adding member
-		}
 	case "GET":
-		var tr teamRequest
+		var tr model.Team
 		errDecode := json.NewDecoder(requ.Body).Decode(&tr)
 		if errDecode != nil {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 			return
 		} else {
 			fmt.Println(fmt.Sprintf("Received request for members of: %v", tr))
-			mb, errMb := db.ListMembers(tr.Team)
+			mb, errMb := db.ListMembers(tr.Name)
 			if errMb != nil {
 				http.Error(resWri, errMb.Error(), http.StatusBadRequest)
 				return
 			}
 			resWri.Write([]byte(fmt.Sprintf("%v", mb)))
+		}
+	case "PUT":
+		var newMembererData model.Member
+		errDecode := json.NewDecoder(requ.Body).Decode(&newMembererData)
+		if errDecode != nil {
+			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
+			return
+		} else {
+			fmt.Println(fmt.Sprintf("Received new member data: %v", newMembererData))
+			// TODO: adding member to database
 		}
 	}
 }
@@ -120,27 +92,41 @@ func debtsHandler(resWri http.ResponseWriter, requ *http.Request) {
 }
 
 func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
-	var newTeamData newTeam
+
 	fmt.Println("teamsHandler called")
 	switch requ.Method {
 	case "PUT":
+		var newTeamData model.Team
 		errDecode := json.NewDecoder(requ.Body).Decode(&newTeamData)
 		if errDecode != nil {
-			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
+			http.Error(
+				resWri,
+				errDecode.Error(),
+				http.StatusBadRequest,
+			)
 			return
 		} else {
-			errInit := db.InitTeamDatabase(newTeamData.TeamName)
-			if errInit != nil {
+			if newTeamData.Name != "" {
+				errInit := db.InitTeamDatabase(newTeamData.Name)
+				if errInit != nil {
+					http.Error(
+						resWri,
+						errInit.Error(),
+						http.StatusBadRequest,
+					)
+					return
+				}
+			} else {
 				http.Error(
 					resWri,
-					errInit.Error(),
+					"Empty team name or no 'team' key in request body",
 					http.StatusBadRequest,
 				)
-				return
 			}
+
 		}
 	case "POST":
-		var renameTeamData renameTeam
+		var renameTeamData model.TeamRename
 		errDecode := json.NewDecoder(requ.Body).Decode(&renameTeamData)
 		if errDecode != nil {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
@@ -187,7 +173,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			}
 		}
 	case "DELETE":
-		var teamToDelData teamToDel
+		var teamToDelData model.Team
 		errDecode := json.NewDecoder(requ.Body).Decode(&teamToDelData)
 		if errDecode != nil {
 			http.Error(
@@ -199,7 +185,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 		} else {
 			teamToDelPath := db.DbPathWithName(
 				*db.DbStorePath,
-				db.TeamFilename(teamToDelData.TeamName),
+				db.TeamFilename(teamToDelData.Name),
 			)
 			dbToDelExist, errCheckExist := db.DbExist(teamToDelPath)
 			if errCheckExist != nil {
@@ -233,7 +219,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 		}
 	default:
 		var teamsNames []string
-		for _, teamFilename := range db.ListTeams(*db.DbStorePath) {
+		for _, teamFilename := range db.ListTeams() {
 			teamName := strings.TrimSuffix(
 				strings.TrimPrefix(
 					teamFilename,
