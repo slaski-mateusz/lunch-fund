@@ -133,7 +133,7 @@ func ListMembers(teamName string) ([]model.Member, error) {
 		if err != nil {
 			return nil, err
 		}
-		query := dbModQueries.listMembersQ
+		query := dbCrudQueries.listMembersQ
 		dbCursor, errPre := db.Prepare(query)
 		if errPre != nil {
 			return nil, errPre

@@ -49,7 +49,7 @@ func docpageHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("docpageHandler called")
 }
 
-// Handlers
+// Members
 
 func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("membersHandler called")
@@ -83,16 +83,21 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 	}
 }
 
+// Orders
+
 func ordersHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("ordersHandler called")
 }
+
+// Debts
 
 func debtsHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("debtsHandler called")
 }
 
-func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
+// Teams
 
+func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("teamsHandler called")
 	switch requ.Method {
 	case "PUT":
@@ -217,7 +222,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 
 			}
 		}
-	default:
+	case "GET":
 		var teamsNames []string
 		for _, teamFilename := range db.ListTeams() {
 			teamName := strings.TrimSuffix(
@@ -234,6 +239,8 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 		return
 	}
 }
+
+// API Router, Nodes nctivation and General Handler
 
 var router = mux.NewRouter().StrictSlash(true)
 

@@ -33,7 +33,7 @@ var dbInitQueries = map[string]string{
 		FOREIGN KEY (creditor_id) REFERENCES members (id) ON UPDATE CASCADE ON DELETE RESTRICT)`,
 }
 
-var dbModQueries = struct {
+var dbCrudQueries = struct {
 	add1stAdminQ        string
 	addMemberQ          string
 	updateMemberQ       string
