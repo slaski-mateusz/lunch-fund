@@ -15,9 +15,9 @@ then
 	exit
 fi
 
-BODY_TEMPLATE=`cat member_new.json`
+BODY_TEMPLATE=`cat members_new.json`
 
 BODY=`echo $BODY_TEMPLATE | tr '\n' ' ' | sed s/\{\{NAME\}\}/$NAME/g | sed s/\{\{EMAIL\}\}/$EMAIL/g | sed s/\{\{PHONE\}\}/$PHONE/g`
 echo $BODY
 
-curl -v -X PUT "$BODY" 127.0.0.1:8080/members/
+curl -v -X PUT -d "$BODY" 127.0.0.1:8080/members/
