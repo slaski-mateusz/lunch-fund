@@ -143,8 +143,8 @@ func ListMembers(teamName string) ([]model.Member, error) {
 			return nil, errExe
 		}
 		fmt.Println(data.RowsAffected())
-		mm := []model.Member{}
-		return mm, nil
+		members := []model.Member{}
+		return members, nil
 	}
 	return nil, errors.New("Unknown problem when getting members from database")
 }

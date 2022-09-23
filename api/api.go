@@ -56,19 +56,20 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 
 	switch requ.Method {
 	case "GET":
-		var tr model.Team
-		errDecode := json.NewDecoder(requ.Body).Decode(&tr)
+		var teamData model.Team
+		errDecode := json.NewDecoder(requ.Body).Decode(&teamData)
 		if errDecode != nil {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 			return
 		} else {
-			fmt.Println(fmt.Sprintf("Received request for members of: %v", tr))
-			mb, errMb := db.ListMembers(tr.Name)
+			fmt.Println(fmt.Sprintf("Received request for members of: %v", teamData))
+			members, errMb := db.ListMembers(teamData.Name)
 			if errMb != nil {
 				http.Error(resWri, errMb.Error(), http.StatusBadRequest)
 				return
 			}
-			resWri.Write([]byte(fmt.Sprintf("%v", mb)))
+			fmt.Println(members)
+			resWri.Write([]byte(fmt.Sprintf("%v", members)))
 		}
 	case "PUT":
 		var newMembererData model.Member
