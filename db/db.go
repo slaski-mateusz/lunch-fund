@@ -106,15 +106,17 @@ func ListTeams() []string {
 	return teamDatabases
 }
 
-func RenameTeam() error {
-	// TODO: Reanaming Team
-	return errors.New("Error when renaming team")
-}
+// Now done in API
+// TODO: Move this here
+// func RenameTeam() error {
+// 	// TODO: Reanaming Team
+// 	return errors.New("Error when renaming team")
+// }
 
-func DeleteTeam() error {
-	// TODO: Deleting Team
-	return errors.New("Error when deleting team")
-}
+// func DeleteTeam() error {
+// 	// TODO: Deleting Team
+// 	return errors.New("Error when deleting team")
+// }
 
 // Members
 
@@ -128,29 +130,86 @@ func ListMembers(teamName string) ([]model.Member, error) {
 		return nil, errExist
 	}
 	if dbe {
-		db, err := sql.Open(dbEngine, dbFilePath)
+		db, errOp := sql.Open(dbEngine, dbFilePath)
 		defer db.Close()
-		if err != nil {
-			return nil, err
+		if errOp != nil {
+			return nil, errOp
 		}
 		query := dbCrudQueries.listMembersQ
 		dbCursor, errPre := db.Prepare(query)
 		if errPre != nil {
 			return nil, errPre
 		}
-		data, errExe := dbCursor.Exec()
+		data, errExe := dbCursor.Query()
+		defer dbCursor.Close()
 		if errExe != nil {
 			return nil, errExe
 		}
-		fmt.Println(data.RowsAffected())
 		members := []model.Member{}
+		for data.Next() {
+			var (
+				recid       int64
+				recname     string
+				recemail    string
+				recphone    string
+				recisadmin  bool
+				recisactive bool
+				recavatar   []byte
+			)
+			errNx := data.Scan(
+				&recid,
+				&recname,
+				&recemail,
+				&recphone,
+				&recisactive,
+				&recisadmin,
+				&recavatar,
+			)
+			if errNx != nil {
+				return nil, errNx
+			}
+			var recmemeber model.Member
+			recmemeber.Id = recid
+			recmemeber.MemberName = recname
+			recmemeber.Email = recemail
+			recmemeber.Phone = recphone
+			recmemeber.Active = recisactive
+			members = append(members, recmemeber)
+		}
 		return members, nil
 	}
 	return nil, errors.New("Unknown problem when getting members from database")
 }
 
-func AddMember(team string, newMember model.Member) error {
+func AddMember(newMember model.TeamMember) error {
 	// TODO: adding new member to database
+	dbFilePath := DbPathWithName(
+		*DbStorePath,
+		TeamFilename(newMember.TeamName),
+	)
+	dbe, errExist := DbExist(dbFilePath)
+	if errExist != nil {
+		return errExist
+	}
+	if dbe {
+		db, errOp := sql.Open(dbEngine, dbFilePath)
+		defer db.Close()
+		if errOp != nil {
+			return errOp
+		}
+		_, errExe := db.Exec(
+			dbCrudQueries.addMemberQ,
+			newMember.MemberName,
+			newMember.Email,
+			newMember.Phone,
+			false,
+			true,
+		)
+		if errExe != nil {
+			return errExe
+		}
+		return nil
+	}
 	return errors.New("Unknown problem when adding member to database")
 }
 

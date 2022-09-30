@@ -4,7 +4,7 @@ type Money int32
 type Timestamp int64
 
 type Team struct {
-	Name string `json:"name"`
+	TeamName string `json:"team_name"`
 }
 
 type TeamRename struct {
@@ -13,17 +13,23 @@ type TeamRename struct {
 }
 
 type Member struct {
-	Id     int64  `json:"id"`
-	Name   string `json:"name"`
-	Email  string `json:"email"`
-	Phone  string `json:"phone"`
-	Active bool   `json:"active"`
-	Secret string `json:"secret"`
+	Id         int64  `json:"id"`
+	MemberName string `json:"member_name"`
+	Email      string `json:"email"`
+	Phone      string `json:"phone"`
+	IsAdmin    bool   `json:"is_admin"`
+	Active     bool   `json:"active"`
+	Secret     string `json:"secret"`
+}
+
+type TeamMember struct {
+	Team
+	Member
 }
 
 type Order struct {
 	Id           int64  `json:"id"`
-	Name         string `json:"name"`
+	OrderName    string `json:"order_name"`
 	Timestamp    int64  `json:"timestamp"`
 	FounderId    int64  `json:"founder_id"`
 	DeliveryCost Money  `json:"delivery_cost"`

@@ -4,15 +4,15 @@ var dbInitQueries = map[string]string{
 	"activateForeginKeys": "PRAGMA foreign_keys = ON;",
 	"createTableMembers": `CREATE TABLE IF NOT EXISTS members (
 		id INTEGER PRIMARY KEY,
-		name TEXT NOT NULL UNIQUE,
+		member_name TEXT NOT NULL UNIQUE,
 		email TEXT NOT NULL UNIQUE,
 		phone TEXT NOT NULL UNIQUE,
 		is_admin INTEGER NOT NULL DEFAULT 0,
 		active INTEGER NOT NULL DEFAULT 1,
-		avatar BLOB)`,
+		secret TEXT)`,
 	"createTableOrders": `CREATE TABLE IF NOT EXISTS orders (
 		id INTEGER PRIMARY KEY,
-		name TEXT NOT NULL UNIQUE,
+		order_name TEXT NOT NULL UNIQUE,
 		timestamp INTEGER NOT NULL,
 		founder_id INTEGER NOT NULL,
 		delivery_cost INTEGER DEFAULT 0,
@@ -49,7 +49,7 @@ var dbCrudQueries = struct {
 	listOrdersDetailsQ  string
 }{
 	add1stAdminQ:        ``,
-	addMemberQ:          ``,
+	addMemberQ:          `INSERT INTO members (member_name, email, phone, is_admin, active) VALUES ($1, $2, $3, $4, $5);`,
 	updateMemberQ:       ``,
 	deleteMemberQ:       ``,
 	listMembersQ:        `SELECT * FROM members;`,

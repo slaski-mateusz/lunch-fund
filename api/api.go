@@ -43,7 +43,7 @@ var apiStructure = &ApiNode{
 	},
 }
 
-// Teams types
+// Doc page
 
 func docpageHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("docpageHandler called")
@@ -62,8 +62,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 			return
 		} else {
-			fmt.Println(fmt.Sprintf("Received request for members of: %v", teamData))
-			members, errMb := db.ListMembers(teamData.Name)
+			members, errMb := db.ListMembers(teamData.TeamName)
 			if errMb != nil {
 				http.Error(resWri, errMb.Error(), http.StatusBadRequest)
 				return
@@ -72,14 +71,20 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			resWri.Write([]byte(fmt.Sprintf("%v", members)))
 		}
 	case "PUT":
-		var newMembererData model.Member
+		var newMembererData model.TeamMember
+		fmt.Println(requ.Body)
 		errDecode := json.NewDecoder(requ.Body).Decode(&newMembererData)
 		if errDecode != nil {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 			return
 		} else {
-			fmt.Println(fmt.Sprintf("Received new member data: %v", newMembererData))
-			// TODO: adding member to database
+			fmt.Println(fmt.Sprintf("Received new member data: %+v", newMembererData))
+			errAdd := db.AddMember(newMembererData)
+			if errAdd != nil {
+				http.Error(resWri, errAdd.Error(), http.StatusBadRequest)
+				return
+			}
+			resWri.Write([]byte("Success"))
 		}
 	}
 }
@@ -112,8 +117,8 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			)
 			return
 		} else {
-			if newTeamData.Name != "" {
-				errInit := db.InitTeamDatabase(newTeamData.Name)
+			if newTeamData.TeamName != "" {
+				errInit := db.InitTeamDatabase(newTeamData.TeamName)
 				if errInit != nil {
 					http.Error(
 						resWri,
@@ -191,7 +196,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 		} else {
 			teamToDelPath := db.DbPathWithName(
 				*db.DbStorePath,
-				db.TeamFilename(teamToDelData.Name),
+				db.TeamFilename(teamToDelData.TeamName),
 			)
 			dbToDelExist, errCheckExist := db.DbExist(teamToDelPath)
 			if errCheckExist != nil {

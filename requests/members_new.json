@@ -1,5 +1,6 @@
 {
-    "name": "{{NAME}}",
+    "team_name": "{{TEAM_NAME}}",
+    "member_name": "{{MEMBER_NAME}}",
     "email": "{{EMAIL}}",
     "phone": "{{PHONE}}"
 }
