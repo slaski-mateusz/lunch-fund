@@ -36,6 +36,7 @@ var dbInitQueries = map[string]string{
 var dbCrudQueries = struct {
 	add1stAdminQ        string
 	addMemberQ          string
+	checkIfMemberExistQ string
 	updateMemberQ       string
 	deleteMemberQ       string
 	listMembersQ        string
@@ -50,8 +51,9 @@ var dbCrudQueries = struct {
 }{
 	add1stAdminQ:        ``,
 	addMemberQ:          `INSERT INTO members (member_name, email, phone, is_admin, active) VALUES ($1, $2, $3, $4, $5);`,
+	checkIfMemberExistQ: `SELECT id FROM members WHERE id=$1`,
 	updateMemberQ:       ``,
-	deleteMemberQ:       ``,
+	deleteMemberQ:       `DELETE FROM members WHERE id=$1`,
 	listMembersQ:        `SELECT * FROM members;`,
 	addOrderQ:           ``,
 	updateOrderQ:        ``,

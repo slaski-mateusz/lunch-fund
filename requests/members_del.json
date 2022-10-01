@@ -1,3 +1,4 @@
 {
-    "id": "{{ID}}"
+    "team_name": "{{TEAM_NAME}}",
+    "id": {{MEMBER_ID}}
 }
