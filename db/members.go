@@ -3,7 +3,8 @@ package db
 import (
 	"database/sql"
 	"errors"
-	"fmt"
+
+	// "fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 
@@ -11,24 +12,11 @@ import (
 )
 
 func ListMembers(teamName string) ([]model.Member, error) {
-	dbFilePath := DbPathWithName(
-		*DbStorePath,
-		TeamFilename(teamName),
-	)
-	fmt.Println(dbFilePath)
-	dbe, errExist := DbExist(dbFilePath)
-	if errExist != nil {
-		fmt.Println("Nie ma bazy")
-		return nil, errExist
-	}
-	if dbe {
-		db, errOp := sql.Open(dbEngine, dbFilePath)
-		defer db.Close()
-		if errOp != nil {
-			return nil, errOp
-		}
+	errCon := connectDB(teamName)
+	if errCon == nil {
+		dbinst := ConnectedDatabases[teamName]
 		query := dbCrudQueries.listMembersQ
-		dbCursor, errPre := db.Prepare(query)
+		dbCursor, errPre := dbinst.Prepare(query)
 		if errPre != nil {
 			return nil, errPre
 		}
@@ -74,21 +62,10 @@ func ListMembers(teamName string) ([]model.Member, error) {
 }
 
 func AddMember(newMember model.TeamMember) error {
-	dbFilePath := DbPathWithName(
-		*DbStorePath,
-		TeamFilename(newMember.TeamName),
-	)
-	dbe, errExist := DbExist(dbFilePath)
-	if errExist != nil {
-		return errExist
-	}
-	if dbe {
-		db, errOp := sql.Open(dbEngine, dbFilePath)
-		defer db.Close()
-		if errOp != nil {
-			return errOp
-		}
-		_, errExe := db.Exec(
+	errCon := connectDB(newMember.TeamName)
+	if errCon == nil {
+		dbinst := ConnectedDatabases[newMember.TeamName]
+		_, errExe := dbinst.Exec(
 			dbCrudQueries.addMemberQ,
 			newMember.MemberName,
 			newMember.Email,
@@ -110,26 +87,14 @@ func UpdateMember(team string, memberData model.Member) error {
 }
 
 func DeleteMember(deleteMember model.TeamMember) error {
-	dbFilePath := DbPathWithName(
-		*DbStorePath,
-		TeamFilename(deleteMember.TeamName),
-	)
-	dbe, errExist := DbExist(dbFilePath)
-	if errExist != nil {
-		return errExist
-	}
-	if dbe {
-		db, errOp := sql.Open(dbEngine, dbFilePath)
-		defer db.Close()
-		if errOp != nil {
-			return errOp
-		}
-		row := db.QueryRow(
+	errCon := connectDB(deleteMember.TeamName)
+	if errCon == nil {
+		dbinst := ConnectedDatabases[deleteMember.TeamName]
+		row := dbinst.QueryRow(
 			dbCrudQueries.checkIfMemberExistQ,
 			deleteMember.Id,
 		)
 		errQuer := row.Scan(&deleteMember.Id)
-		fmt.Println(errQuer)
 		if errQuer != nil {
 			if errQuer == sql.ErrNoRows {
 				return errors.New("No such user in database")
@@ -137,7 +102,7 @@ func DeleteMember(deleteMember model.TeamMember) error {
 				return errQuer
 			}
 		} else {
-			_, errExe := db.Exec(
+			_, errExe := dbinst.Exec(
 				dbCrudQueries.deleteMemberQ,
 				deleteMember.Id,
 			)

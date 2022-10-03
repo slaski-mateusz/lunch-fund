@@ -44,11 +44,18 @@ func connectDB(teamName string) error {
 		TeamFilename(teamName),
 	)
 	if dbe, _ := DbExist(dbFilePath); dbe {
-		var err error
-		ConnectedDatabases[teamName], err = sql.Open(dbEngine, dbFilePath)
-		defer ConnectedDatabases[teamName].Close()
-		if err != nil {
-			return err
+		if ConnectedDatabases == nil {
+			ConnectedDatabases = make(map[string]*sql.DB)
+		}
+		if ConnectedDatabases[teamName] == nil {
+			var err error
+			ConnectedDatabases[teamName], err = sql.Open(dbEngine, dbFilePath)
+
+			// defer ConnectedDatabases[teamName].Close()
+			if err != nil {
+				return err
+			}
+		} else {
 		}
 	}
 	return nil
