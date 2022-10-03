@@ -50,12 +50,9 @@ func connectDB(teamName string) error {
 		if ConnectedDatabases[teamName] == nil {
 			var err error
 			ConnectedDatabases[teamName], err = sql.Open(dbEngine, dbFilePath)
-
-			// defer ConnectedDatabases[teamName].Close()
 			if err != nil {
 				return err
 			}
-		} else {
 		}
 	}
 	return nil
