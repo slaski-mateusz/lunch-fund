@@ -17,8 +17,8 @@ type Member struct {
 	MemberName string `json:"member_name"`
 	Email      string `json:"email"`
 	Phone      string `json:"phone"`
-	IsAdmin    bool   `json:"is_admin"`
-	Active     bool   `json:"active"`
+	IsAdmin    int8   `json:"is_admin"`
+	IsActive   int8   `json:"is_active"`
 	Secret     string `json:"secret"`
 }
 

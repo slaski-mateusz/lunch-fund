@@ -8,6 +8,7 @@ BODY_TEMPLATE=`loadBodyTemplate`
 
 BODY=$( jq -n \
 --arg TEAM_NAME "$TEAM_NAME" \
+--argjson ID "$ID" \
 --arg MEMBER_NAME "$MEMBER_NAME" \
 --arg EMAIL "$EMAIL" \
 --arg PHONE "$PHONE" \
@@ -17,4 +18,4 @@ BODY=$( jq -n \
 
 echo $BODY
 
-curl -v -X PUT -d "$BODY" 127.0.0.1:8080/members/
+curl -v -X POST -d "$BODY" 127.0.0.1:8080/members/

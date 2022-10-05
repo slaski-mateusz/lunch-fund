@@ -8,7 +8,7 @@ var dbInitQueries = map[string]string{
 		email TEXT NOT NULL UNIQUE,
 		phone TEXT NOT NULL UNIQUE,
 		is_admin INTEGER NOT NULL DEFAULT 0,
-		active INTEGER NOT NULL DEFAULT 1,
+		is_active INTEGER NOT NULL DEFAULT 1,
 		secret TEXT)`,
 	"createTableOrders": `CREATE TABLE IF NOT EXISTS orders (
 		id INTEGER PRIMARY KEY,
@@ -50,9 +50,9 @@ var dbCrudQueries = struct {
 	listOrdersDetailsQ  string
 }{
 	add1stAdminQ:        ``,
-	addMemberQ:          `INSERT INTO members (member_name, email, phone, is_admin, active) VALUES ($1, $2, $3, $4, $5);`,
+	addMemberQ:          `INSERT INTO members (member_name, email, phone, is_admin, is_active) VALUES ($1, $2, $3, $4, $5);`,
 	checkIfMemberExistQ: `SELECT id FROM members WHERE id=$1`,
-	updateMemberQ:       ``,
+	updateMemberQ:       `UPDATE members SET member_name=$1 email=$2 phone=$3 is_admin=$5 is_active=$5 WHERE id=$6`,
 	deleteMemberQ:       `DELETE FROM members WHERE id=$1`,
 	listMembersQ:        `SELECT * FROM members;`,
 	addOrderQ:           ``,

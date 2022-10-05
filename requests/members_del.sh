@@ -1,20 +1,17 @@
 #!/bin/bash
-TEAM_NAME=$1
-MEMBER_ID=$2
 
-if [ -z "$TEAM_NAME" ]
-then
-	exit
-fi
+source ./functions.sh
 
-if [ -z "$MEMBER_ID" ]
-then
-	exit
-fi
+parseOptions "$@"
 
-BODY_TEMPLATE=`cat members_del.json`
+BODY_TEMPLATE=`loadBodyTemplate`
 
-BODY=`echo $BODY_TEMPLATE | tr '\n' ' ' | sed s/\{\{TEAM_NAME\}\}/"$TEAM_NAME"/g | sed s/\{\{MEMBER_ID\}\}/"$MEMBER_ID"/g`
+BODY=$( jq -n \
+--arg TEAM_NAME "$TEAM_NAME" \
+--argjson ID $ID \
+"$BODY_TEMPLATE"\
+)
+
 echo $BODY
 
 curl -v -X DELETE -d "$BODY" "127.0.0.1:8080/members/"

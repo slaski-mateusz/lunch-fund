@@ -32,8 +32,8 @@ func ListMembers(teamName string) ([]model.Member, error) {
 				recname     string
 				recemail    string
 				recphone    string
-				recisadmin  bool
-				recisactive bool
+				recisadmin  int8
+				recisactive int8
 				recavatar   []byte
 			)
 			errNx := data.Scan(
@@ -53,7 +53,7 @@ func ListMembers(teamName string) ([]model.Member, error) {
 			recmemeber.MemberName = recname
 			recmemeber.Email = recemail
 			recmemeber.Phone = recphone
-			recmemeber.Active = recisactive
+			recmemeber.IsActive = recisactive
 			members = append(members, recmemeber)
 		}
 		return members, nil

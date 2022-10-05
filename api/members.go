@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/slaski-mateusz/lunch-fund/db"
@@ -35,6 +36,12 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 		resWri.Write([]byte("Member added"))
 
 	case "POST":
+		var updateMembererData model.TeamMember
+		errDecode := json.NewDecoder(requ.Body).Decode(&updateMembererData)
+		if errDecode != nil {
+			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
+		}
+		fmt.Printf("%+v\n\n", updateMembererData)
 		// TODO Update mamber
 
 	case "DELETE":

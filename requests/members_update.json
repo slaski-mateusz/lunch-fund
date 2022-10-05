@@ -1,6 +1,8 @@
 {
     "team_name": $TEAM_NAME,
+    "id": $ID,
     "member_name": $MEMBER_NAME,
     "email": $EMAIL,
-    "phone": $PHONE
+    "phone": $PHONE,
+    "is_active": $IS_ACTIVE
 }
