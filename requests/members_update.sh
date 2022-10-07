@@ -13,6 +13,7 @@ BODY=$( jq -n \
 --arg EMAIL "$EMAIL" \
 --arg PHONE "$PHONE" \
 --argjson IS_ACTIVE "$IS_ACTIVE" \
+--argjson IS_ADMIN "$IS_ADMIN" \
 "$BODY_TEMPLATE"\
 )
 

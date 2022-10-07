@@ -42,7 +42,11 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 		}
 		fmt.Printf("%+v\n\n", updateMembererData)
-		// TODO Update mamber
+		errUpd := db.UpdateMember(updateMembererData)
+		if errUpd != nil {
+			http.Error(resWri, errUpd.Error(), http.StatusBadRequest)
+		}
+		resWri.Write([]byte("Member updated"))
 
 	case "DELETE":
 		var deleteMenberData model.TeamMember

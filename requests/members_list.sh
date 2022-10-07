@@ -14,4 +14,5 @@ BODY=$( jq -n \
 # BODY=`echo $BODY_TEMPLATE | tr '\n' ' ' | sed s/\{\{TEAM_NAME\}\}/"$TEAM_NAME"/g `
 echo $BODY
 
+curl -v -X GET -d "$BODY" "127.0.0.1:8080/members/"
 curl -v -X GET -d "$BODY" "127.0.0.1:8080/members/" | jq .

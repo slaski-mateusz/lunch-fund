@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	// "fmt"
 
@@ -27,33 +28,21 @@ func ListMembers(teamName string) ([]model.Member, error) {
 		}
 		members := []model.Member{}
 		for data.Next() {
-			var (
-				recid       int64
-				recname     string
-				recemail    string
-				recphone    string
-				recisadmin  int8
-				recisactive int8
-				recavatar   []byte
-			)
+			var recmemeber model.Member
+			var secret sql.NullString
 			errNx := data.Scan(
-				&recid,
-				&recname,
-				&recemail,
-				&recphone,
-				&recisactive,
-				&recisadmin,
-				&recavatar,
+				&recmemeber.Id,
+				&recmemeber.MemberName,
+				&recmemeber.Email,
+				&recmemeber.Phone,
+				&recmemeber.IsAdmin,
+				&recmemeber.IsActive,
+				&secret,
 			)
+			fmt.Printf("%+v\n", recmemeber)
 			if errNx != nil {
 				return nil, errNx
 			}
-			var recmemeber model.Member
-			recmemeber.Id = recid
-			recmemeber.MemberName = recname
-			recmemeber.Email = recemail
-			recmemeber.Phone = recphone
-			recmemeber.IsActive = recisactive
 			members = append(members, recmemeber)
 		}
 		return members, nil
@@ -81,8 +70,26 @@ func AddMember(newMember model.TeamMember) error {
 	return errors.New("Unknown problem when adding member to database")
 }
 
-func UpdateMember(team string, memberData model.Member) error {
+func UpdateMember(memberData model.TeamMember) error {
 	// TODO: update member data
+	errCon := connectDB((memberData.TeamName))
+	if errCon == nil {
+		dbinst := ConnectedDatabases[memberData.TeamName]
+		fmt.Printf("%+v", memberData)
+		_, errExe := dbinst.Exec(
+			dbCrudQueries.updateMemberQ,
+			memberData.MemberName,
+			memberData.Email,
+			memberData.Phone,
+			memberData.IsAdmin,
+			memberData.IsActive,
+			memberData.Id,
+		)
+		if errExe != nil {
+			return errExe
+		}
+		return nil
+	}
 	return errors.New("Unknown problem when updating member in database")
 }
 

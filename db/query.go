@@ -50,10 +50,10 @@ var dbCrudQueries = struct {
 	listOrdersDetailsQ  string
 }{
 	add1stAdminQ:        ``,
-	addMemberQ:          `INSERT INTO members (member_name, email, phone, is_admin, is_active) VALUES ($1, $2, $3, $4, $5);`,
-	checkIfMemberExistQ: `SELECT id FROM members WHERE id=$1`,
-	updateMemberQ:       `UPDATE members SET member_name=$1 email=$2 phone=$3 is_admin=$5 is_active=$5 WHERE id=$6`,
-	deleteMemberQ:       `DELETE FROM members WHERE id=$1`,
+	addMemberQ:          `INSERT INTO members (member_name, email, phone, is_admin, is_active) VALUES (?, ?, ?, ?, ?);`,
+	checkIfMemberExistQ: `SELECT id FROM members WHERE id=?`,
+	updateMemberQ:       `UPDATE members SET member_name=?, email=?, phone=?, is_admin=?, is_active=? WHERE id=?`,
+	deleteMemberQ:       `DELETE FROM members WHERE id=?`,
 	listMembersQ:        `SELECT * FROM members;`,
 	addOrderQ:           ``,
 	updateOrderQ:        ``,
