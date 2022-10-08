@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/slaski-mateusz/lunch-fund/db"
@@ -11,7 +10,7 @@ import (
 
 func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 	switch requ.Method {
-	case "GET":
+	case http.MethodGet:
 		var teamData model.Team
 		errDecode := json.NewDecoder(requ.Body).Decode(&teamData)
 		if errDecode != nil {
@@ -23,7 +22,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 		}
 		json.NewEncoder(resWri).Encode(members)
 
-	case "PUT":
+	case http.MethodPut:
 		var newMembererData model.TeamMember
 		errDecode := json.NewDecoder(requ.Body).Decode(&newMembererData)
 		if errDecode != nil {
@@ -35,26 +34,25 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 		}
 		resWri.Write([]byte("Member added"))
 
-	case "POST":
-		var updateMembererData model.TeamMember
-		errDecode := json.NewDecoder(requ.Body).Decode(&updateMembererData)
+	case http.MethodPost:
+		var updatedMembererData model.TeamMember
+		errDecode := json.NewDecoder(requ.Body).Decode(&updatedMembererData)
 		if errDecode != nil {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 		}
-		fmt.Printf("%+v\n\n", updateMembererData)
-		errUpd := db.UpdateMember(updateMembererData)
+		errUpd := db.UpdateMember(updatedMembererData)
 		if errUpd != nil {
 			http.Error(resWri, errUpd.Error(), http.StatusBadRequest)
 		}
 		resWri.Write([]byte("Member updated"))
 
-	case "DELETE":
-		var deleteMenberData model.TeamMember
-		errDecode := json.NewDecoder(requ.Body).Decode(&deleteMenberData)
+	case http.MethodDelete:
+		var deletedMenberData model.TeamMember
+		errDecode := json.NewDecoder(requ.Body).Decode(&deletedMenberData)
 		if errDecode != nil {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 		}
-		errDel := db.DeleteMember(deleteMenberData)
+		errDel := db.DeleteMember(deletedMenberData)
 		if errDel != nil {
 			http.Error(resWri, errDel.Error(), http.StatusBadRequest)
 		}

@@ -2,37 +2,46 @@ package api
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-type ApiNode struct {
+type RouteNode struct {
 	nodeName string
 	function func(resWri http.ResponseWriter, requ *http.Request)
-	children []*ApiNode
+	children []*RouteNode
 }
 
-var apiStructure = &ApiNode{
+var RoutingStructure = &RouteNode{
 	nodeName: "",
 	function: docpageHandler,
-	children: []*ApiNode{
+	children: []*RouteNode{
+		// {
+		// 	nodeName: "static",
+		// 	function: staticFilesServe,
+		// },
 		{
-			nodeName: "members",
-			function: membersHandler,
-		},
-		{
-			nodeName: "orders",
-			function: ordersHandler,
-		},
-		{
-			nodeName: "debts",
-			function: debtsHandler,
-		},
-		{
-			nodeName: "teams",
-			function: teamsHandler,
+			nodeName: "api",
+			function: docpageHandler,
+			children: []*RouteNode{
+				{
+					nodeName: "members",
+					function: membersHandler,
+				},
+				{
+					nodeName: "orders",
+					function: ordersHandler,
+				},
+				{
+					nodeName: "debts",
+					function: debtsHandler,
+				},
+				{
+					nodeName: "teams",
+					function: teamsHandler,
+				},
+			},
 		},
 	},
 }
@@ -44,16 +53,16 @@ func docpageHandler(resWri http.ResponseWriter, requ *http.Request) {
 }
 
 // Debts
-
+// TODO Move to separate file
 func debtsHandler(resWri http.ResponseWriter, requ *http.Request) {
 	fmt.Println("debtsHandler called")
 }
 
-// API Router, Nodes nctivation and General Handler
+// API Router, Nodes activation and General Handler
 
-var router = mux.NewRouter().StrictSlash(true)
+var Router = mux.NewRouter().StrictSlash(true)
 
-func activateApiNode(in_uri string, node *ApiNode) {
+func ActivateNodeRoute(in_uri string, node *RouteNode) {
 	var nodeUri string
 	if node.nodeName == "" {
 		nodeUri = "/"
@@ -62,15 +71,9 @@ func activateApiNode(in_uri string, node *ApiNode) {
 	}
 	apiUri := in_uri + nodeUri
 	if node.function != nil {
-		router.HandleFunc(apiUri, node.function)
+		Router.HandleFunc(apiUri, node.function)
 	}
 	for _, child := range node.children {
-		activateApiNode(apiUri, child)
+		ActivateNodeRoute(apiUri, child)
 	}
-}
-
-func HandleRequests(netIntf string, netPort uint) {
-	activateApiNode("", apiStructure)
-	webIntf := fmt.Sprintf("%v:%v", netIntf, netPort)
-	log.Fatal(http.ListenAndServe(webIntf, router))
 }
