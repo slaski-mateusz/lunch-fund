@@ -12,7 +12,6 @@ import (
 )
 
 func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
-	fmt.Println("teamsHandler called")
 	switch requ.Method {
 	case "PUT":
 		var newTeamData model.Team

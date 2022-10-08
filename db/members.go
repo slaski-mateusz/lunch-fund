@@ -39,7 +39,6 @@ func ListMembers(teamName string) ([]model.Member, error) {
 				&recmemeber.IsActive,
 				&secret,
 			)
-			fmt.Printf("%+v\n", recmemeber)
 			if errNx != nil {
 				return nil, errNx
 			}
@@ -75,7 +74,6 @@ func UpdateMember(memberData model.TeamMember) error {
 	errCon := connectDB((memberData.TeamName))
 	if errCon == nil {
 		dbinst := ConnectedDatabases[memberData.TeamName]
-		fmt.Printf("%+v", memberData)
 		_, errExe := dbinst.Exec(
 			dbCrudQueries.updateMemberQ,
 			memberData.MemberName,

@@ -49,13 +49,13 @@ var RoutingStructure = &RouteNode{
 // Doc page
 
 func docpageHandler(resWri http.ResponseWriter, requ *http.Request) {
-	fmt.Println("docpageHandler called")
+	resWri.Write([]byte("Not implemented yet"))
 }
 
 // Debts
 // TODO Move to separate file
 func debtsHandler(resWri http.ResponseWriter, requ *http.Request) {
-	fmt.Println("debtsHandler called")
+	resWri.Write([]byte("Not implemented yet"))
 }
 
 // API Router, Nodes activation and General Handler
