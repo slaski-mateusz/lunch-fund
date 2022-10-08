@@ -1,4 +1,4 @@
 {
-    "team_name": $TEAM_NAME,
-    "id": $ID
+    "team_name": $teamname,
+    "id": $id
 }

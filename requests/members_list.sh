@@ -7,7 +7,7 @@ parseOptions "$@"
 BODY_TEMPLATE=`loadBodyTemplate`
 
 BODY=$( jq -n \
---arg TEAM_NAME "$TEAM_NAME" \
+--arg teamname "$teamname" \
 "$BODY_TEMPLATE"\
 )
 

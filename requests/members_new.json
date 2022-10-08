@@ -1,7 +1,7 @@
 {
-    "team_name": $TEAM_NAME,
-    "member_name": $MEMBER_NAME,
-    "email": $EMAIL,
-    "phone": $PHONE,
-    "is_active": $IS_ACTIVE
+    "team_name": $teamname,
+    "member_name": $membername,
+    "email": $email,
+    "phone": $phone,
+    "is_active": $isactive
 }

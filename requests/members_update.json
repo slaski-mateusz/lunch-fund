@@ -1,9 +1,9 @@
 {
-    "team_name": $TEAM_NAME,
-    "id": $ID,
-    "member_name": $MEMBER_NAME,
-    "email": $EMAIL,
-    "phone": $PHONE,
-    "is_active": $IS_ACTIVE,
-    "is_admin": $IS_ADMIN
+    "team_name": $teamname,
+    "id": $id,
+    "member_name": $membername,
+    "email": $email,
+    "phone": $phone,
+    "is_active": $isactive,
+    "is_admin": $isadmin
 }
