@@ -1,3 +1,3 @@
-backend
-frontend
+./backend/backend
+./frontend/frontend
 *.db
