@@ -23,7 +23,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 		json.NewEncoder(resWri).Encode(members)
 
 	case http.MethodPut:
-		var newMembererData model.TeamMember
+		var newMembererData model.Member
 		errDecode := json.NewDecoder(requ.Body).Decode(&newMembererData)
 		if errDecode != nil {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
@@ -35,7 +35,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 		resWri.Write([]byte("Member added"))
 
 	case http.MethodPost:
-		var updatedMembererData model.TeamMember
+		var updatedMembererData model.Member
 		errDecode := json.NewDecoder(requ.Body).Decode(&updatedMembererData)
 		if errDecode != nil {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
@@ -47,7 +47,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 		resWri.Write([]byte("Member updated"))
 
 	case http.MethodDelete:
-		var deletedMenberData model.TeamMember
+		var deletedMenberData model.Member
 		errDecode := json.NewDecoder(requ.Body).Decode(&deletedMenberData)
 		if errDecode != nil {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)

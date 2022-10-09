@@ -13,6 +13,7 @@ type TeamRename struct {
 }
 
 type Member struct {
+	Team
 	Id         int64  `json:"id"`
 	MemberName string `json:"member_name"`
 	Email      string `json:"email"`
@@ -22,12 +23,8 @@ type Member struct {
 	Secret     string `json:"secret"`
 }
 
-type TeamMember struct {
-	Team
-	Member
-}
-
 type Order struct {
+	Team
 	Id           int64  `json:"id"`
 	OrderName    string `json:"order_name"`
 	Timestamp    int64  `json:"timestamp"`
@@ -37,12 +34,14 @@ type Order struct {
 }
 
 type OrderMember struct {
+	Team
 	OrderId  int64 `json:"order_id"`
 	MemberId int64 `json:"member_id"`
 	Amount   Money `json:"amount"`
 }
 
 type Debt struct {
+	Team
 	DebtorId        int64     `json:"debtor_id"`
 	CreditorId      int64     `json:"creditor_id"`
 	Amount          Money     `json:"amount"`

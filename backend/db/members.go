@@ -46,7 +46,7 @@ func ListMembers(teamName string) ([]model.Member, error) {
 	return nil, errors.New("Unknown problem when getting members from database")
 }
 
-func AddMember(newMember model.TeamMember) error {
+func AddMember(newMember model.Member) error {
 	errCon := connectDB(newMember.TeamName)
 	if errCon == nil {
 		dbinst := ConnectedDatabases[newMember.TeamName]
@@ -66,7 +66,7 @@ func AddMember(newMember model.TeamMember) error {
 	return errors.New("Unknown problem when adding member to database")
 }
 
-func UpdateMember(memberData model.TeamMember) error {
+func UpdateMember(memberData model.Member) error {
 	// TODO: update member data
 	errCon := connectDB((memberData.TeamName))
 	if errCon == nil {
@@ -88,7 +88,7 @@ func UpdateMember(memberData model.TeamMember) error {
 	return errors.New("Unknown problem when updating member in database")
 }
 
-func DeleteMember(deleteMember model.TeamMember) error {
+func DeleteMember(deleteMember model.Member) error {
 	errCon := connectDB(deleteMember.TeamName)
 	if errCon == nil {
 		dbinst := ConnectedDatabases[deleteMember.TeamName]

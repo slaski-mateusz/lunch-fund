@@ -11,6 +11,7 @@ import (
 )
 
 func RunServer(netIntf string, netPort uint) {
+	// TODO embedd static files within application?
 	api.ActivateNodeRoute("", api.RoutingStructure)
 	api.Router.PathPrefix("/static/").Handler(
 		http.StripPrefix(
