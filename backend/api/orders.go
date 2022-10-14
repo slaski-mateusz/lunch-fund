@@ -16,17 +16,16 @@ func ordersHandler(resWri http.ResponseWriter, requ *http.Request) {
 		if errDecode != nil {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 		}
-		orders, errMb := db.ListOrders(teamData.TeamName)
-		if errMb != nil {
-			http.Error(resWri, errMb.Error(), http.StatusBadRequest)
+		orders, errOrd := db.ListOrders(teamData.TeamName)
+		if errOrd != nil {
+			http.Error(resWri, errOrd.Error(), http.StatusBadRequest)
 		}
 		json.NewEncoder(resWri).Encode(orders)
-
 	case http.MethodPut:
-		json.NewEncoder(resWri).Encode("Not implemented yet")
+		json.NewEncoder(resWri).Encode("Not implemented in api yet")
 	case http.MethodPost:
-		json.NewEncoder(resWri).Encode("Not implemented yet")
+		json.NewEncoder(resWri).Encode("Not implemented in api yet")
 	case http.MethodDelete:
-		json.NewEncoder(resWri).Encode("Not implemented yet")
+		json.NewEncoder(resWri).Encode("Not implemented in api yet")
 	}
 }
