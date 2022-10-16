@@ -1,0 +1,8 @@
+{
+    "team_name": $teamname,
+    "order_name": $ordername,
+    "timestamp": $timestamp,
+    "founder_id": $founderid,
+    "delivery_cost": $deliverycost,
+    "tip_cost": $tipcost
+}

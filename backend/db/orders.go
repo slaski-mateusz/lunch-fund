@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 
@@ -14,6 +15,7 @@ func ListOrders(teamName string) ([]model.Order, error) {
 	if errCon == nil {
 		dbinst := ConnectedDatabases[teamName]
 		query := dbCrudQueries.listOrdersQ
+		fmt.Println(query)
 		dbCursor, errPre := dbinst.Prepare(query)
 		if errPre != nil {
 			return nil, errPre

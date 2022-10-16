@@ -14,4 +14,4 @@ BODY=$( jq -n \
 
 echo $BODY
 
-curl -v -X DELETE -d "$BODY" "127.0.0.1:8080/members/"
+curl -v -X DELETE -d "$BODY" "127.0.0.1:8080/api/members/"

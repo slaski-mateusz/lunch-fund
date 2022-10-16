@@ -19,4 +19,5 @@ BODY=$( jq -n \
 
 echo $BODY
 
+curl -v -X PUT -d "$BODY" "127.0.0.1:8080/api/teams/"
 curl -v -X POST -d "$BODY" 127.0.0.1:8080/members/
