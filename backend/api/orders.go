@@ -30,7 +30,22 @@ func ordersHandler(resWri http.ResponseWriter, requ *http.Request) {
 		return
 
 	case http.MethodPut:
-		json.NewEncoder(resWri).Encode("Not implemented in api yet")
+		var newOrderData model.Order
+		errDecode := json.NewDecoder(requ.Body).Decode(&newOrderData)
+		if errDecode != nil {
+			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
+			return
+		}
+		if newOrderData.TeamName == "" {
+			http.Error(resWri, "Team name can not to be emty!", http.StatusBadRequest)
+			return
+		}
+		errAdd := db.AddOrder(newOrderData)
+		if errAdd != nil {
+			http.Error(resWri, errAdd.Error(), http.StatusBadRequest)
+			return
+		}
+		resWri.Write([]byte("Member added"))
 		return
 	case http.MethodPost:
 		json.NewEncoder(resWri).Encode("Not implemented in api yet")
