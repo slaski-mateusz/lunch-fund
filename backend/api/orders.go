@@ -45,13 +45,45 @@ func ordersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			http.Error(resWri, errAdd.Error(), http.StatusBadRequest)
 			return
 		}
-		resWri.Write([]byte("Member added"))
+		resWri.Write([]byte("Order added"))
 		return
+
 	case http.MethodPost:
-		json.NewEncoder(resWri).Encode("Not implemented in api yet")
+		var updatedOrderData model.Order
+		errDecode := json.NewDecoder(requ.Body).Decode(&updatedOrderData)
+		if errDecode != nil {
+			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
+			return
+		}
+		if updatedOrderData.TeamName == "" {
+			http.Error(resWri, "Team name can not to be emty!", http.StatusBadRequest)
+			return
+		}
+		errUpd := db.UpdateOrder(updatedOrderData)
+		if errUpd != nil {
+			http.Error(resWri, errUpd.Error(), http.StatusBadRequest)
+			return
+		}
+		resWri.Write([]byte("Order updated"))
 		return
+
 	case http.MethodDelete:
-		json.NewEncoder(resWri).Encode("Not implemented in api yet")
+		var deletedOrderData model.Order
+		errDecode := json.NewDecoder(requ.Body).Decode(&deletedOrderData)
+		if errDecode != nil {
+			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
+			return
+		}
+		if deletedOrderData.TeamName == "" {
+			http.Error(resWri, "Team name can not to be emty!", http.StatusBadRequest)
+			return
+		}
+		errDel := db.DeleteOrder(deletedOrderData)
+		if errDel != nil {
+			http.Error(resWri, errDel.Error(), http.StatusBadRequest)
+			return
+		}
+		resWri.Write([]byte("Order deleted"))
 		return
 	}
 }

@@ -70,12 +70,12 @@ func AddOrder(newOrder model.Order) error {
 	return errors.New("Unknown problem when adding order to database")
 }
 
-func UpdateOrder(team string, newOrder model.Order) error {
+func UpdateOrder(updatedOrder model.Order) error {
 	// TODO: adding new order to database
 	return errors.New("Updating orders not implemented in database")
 }
 
-func DeleteOrder(team string, newOrder model.Order) error {
+func DeleteOrder(deletedOrder model.Order) error {
 	// TODO: adding new order to database
 	return errors.New("Deleteing orders not implemented in database")
 }
