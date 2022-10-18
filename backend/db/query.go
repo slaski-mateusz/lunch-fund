@@ -41,6 +41,7 @@ var dbCrudQueries = struct {
 	deleteMemberQ       string
 	listMembersQ        string
 	addOrderQ           string
+	checkIfOrderExistQ  string
 	updateOrderQ        string
 	deleteOrderQ        string
 	listOrdersQ         string
@@ -56,8 +57,9 @@ var dbCrudQueries = struct {
 	deleteMemberQ:       `DELETE FROM members WHERE id=?`,
 	listMembersQ:        `SELECT * FROM members;`,
 	addOrderQ:           `INSERT INTO orders (order_name, timestamp, founder_id, delivery_cost, tip_cost) VALUES (?, ?, ?, ?, ?);`,
-	updateOrderQ:        ``,
-	deleteOrderQ:        ``,
+	checkIfOrderExistQ:  `SELECT id FROM orders WHERE id=?`,
+	updateOrderQ:        `UPDATE orders SET order_name=?, timestamp=?, founder_id=?, delivery_cost=?, tip_cost=? WHERE id=?`,
+	deleteOrderQ:        `DELETE FROM orders WHERE id=?`,
 	listOrdersQ:         `SELECT * FROM orders;`,
 	addOrderDetailsQ:    ``,
 	updateOrderDetailsQ: ``,

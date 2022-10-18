@@ -67,7 +67,6 @@ func AddMember(newMember model.Member) error {
 }
 
 func UpdateMember(memberData model.Member) error {
-	// TODO: update member data
 	errCon := connectDB((memberData.TeamName))
 	if errCon == nil {
 		dbinst := ConnectedDatabases[memberData.TeamName]

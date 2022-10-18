@@ -71,11 +71,51 @@ func AddOrder(newOrder model.Order) error {
 }
 
 func UpdateOrder(updatedOrder model.Order) error {
-	// TODO: adding new order to database
-	return errors.New("Updating orders not implemented in database")
+	errCon := connectDB((updatedOrder.TeamName))
+	if errCon == nil {
+		dbinst := ConnectedDatabases[updatedOrder.TeamName]
+		_, errExe := dbinst.Exec(
+			dbCrudQueries.updateMemberQ,
+			updatedOrder.OrderName,
+			updatedOrder.Timestamp,
+			updatedOrder.FounderId,
+			updatedOrder.DeliveryCost,
+			updatedOrder.TipCost,
+			updatedOrder.Id,
+		)
+		if errExe != nil {
+			return errExe
+		}
+		return nil
+	}
+	return errors.New("Unknown problem when updating member in database")
 }
 
 func DeleteOrder(deletedOrder model.Order) error {
-	// TODO: adding new order to database
-	return errors.New("Deleteing orders not implemented in database")
+	errCon := connectDB(deletedOrder.TeamName)
+	if errCon == nil {
+		dbinst := ConnectedDatabases[deletedOrder.TeamName]
+		row := dbinst.QueryRow(
+			dbCrudQueries.checkIfOrderExistQ,
+			deletedOrder.Id,
+		)
+		errQuer := row.Scan(&deletedOrder.Id)
+		if errQuer != nil {
+			if errQuer == sql.ErrNoRows {
+				return errors.New("No such user in database")
+			} else {
+				return errQuer
+			}
+		} else {
+			_, errExe := dbinst.Exec(
+				dbCrudQueries.deleteOrderQ,
+				deletedOrder.Id,
+			)
+			if errExe != nil {
+				return errExe
+			}
+			return nil
+		}
+	}
+	return errors.New("Unknown problem when delete member from database")
 }
