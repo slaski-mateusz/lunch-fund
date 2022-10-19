@@ -70,18 +70,18 @@ func AddOrder(newOrder model.Order) error {
 	return errors.New("Unknown problem when adding order to database")
 }
 
-func UpdateOrder(updatedOrder model.Order) error {
-	errCon := connectDB((updatedOrder.TeamName))
+func UpdateOrder(orderData model.Order) error {
+	errCon := connectDB((orderData.TeamName))
 	if errCon == nil {
-		dbinst := ConnectedDatabases[updatedOrder.TeamName]
+		dbinst := ConnectedDatabases[orderData.TeamName]
 		_, errExe := dbinst.Exec(
-			dbCrudQueries.updateMemberQ,
-			updatedOrder.OrderName,
-			updatedOrder.Timestamp,
-			updatedOrder.FounderId,
-			updatedOrder.DeliveryCost,
-			updatedOrder.TipCost,
-			updatedOrder.Id,
+			dbCrudQueries.updateOrderQ,
+			orderData.OrderName,
+			orderData.Timestamp,
+			orderData.FounderId,
+			orderData.DeliveryCost,
+			orderData.TipCost,
+			orderData.Id,
 		)
 		if errExe != nil {
 			return errExe
