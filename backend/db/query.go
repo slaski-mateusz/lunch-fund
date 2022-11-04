@@ -64,5 +64,5 @@ var dbCrudQueries = struct {
 	addOrderDetailsQ:    ``,
 	updateOrderDetailsQ: ``,
 	deleteOrderDetailsQ: ``,
-	listOrdersDetailsQ:  `SELECT * FROM orders_details;`,
+	listOrdersDetailsQ:  `SELECT * FROM orders_details WHERE order_id=?;`,
 }

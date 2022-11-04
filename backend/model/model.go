@@ -33,7 +33,7 @@ type Order struct {
 	TipCost      Money  `json:"tip_cost"`
 }
 
-type OrderMember struct {
+type OrderDetail struct {
 	Team
 	OrderId  int64 `json:"order_id"`
 	MemberId int64 `json:"member_id"`
