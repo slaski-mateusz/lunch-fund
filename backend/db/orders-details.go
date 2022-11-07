@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+
 	"github.com/slaski-mateusz/lunch-fund/backend/model"
 )
 
@@ -19,20 +20,20 @@ func ListOrdersDetails(teamName string, orderId int64) ([]model.OrderDetail, err
 		if errExe != nil {
 			return nil, errExe
 		}
-		order_details := []model.OrderDetail{}
+		ordersDetails := []model.OrderDetail{}
 		for data.Next() {
-			var recdetail model.OrderDetail
+			var recDetail model.OrderDetail
 			errNx := data.Scan(
-				&recdetail.OrderId,
-				&recdetail.MemberId,
-				&recdetail.Amount,
+				&recDetail.OrderId,
+				&recDetail.MemberId,
+				&recDetail.Amount,
 			)
 			if errNx != nil {
-				return, nil, errerrNx
+				return nil, errNx
 			}
-			order_details = append(orderorder_details, rerecdetail)
+			ordersDetails = append(ordersDetails, recDetail)
 		}
-		return order_details, nil
+		return ordersDetails, nil
 	}
 	return nil, errors.New("Unknown problem when getting members from database")
 }
