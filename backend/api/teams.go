@@ -109,7 +109,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			if errCheckExist != nil {
 				http.Error(
 					resWri,
-					errDecode.Error(),
+					errCheckExist.Error(),
 					http.StatusBadRequest,
 				)
 				return
@@ -119,7 +119,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 					if errRemove != nil {
 						http.Error(
 							resWri,
-							errDecode.Error(),
+							errRemove.Error(),
 							http.StatusBadRequest,
 						)
 						return

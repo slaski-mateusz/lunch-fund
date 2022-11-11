@@ -34,6 +34,10 @@ var RoutingStructure = &RouteNode{
 					function: ordersHandler,
 				},
 				{
+					nodeName: "orders_details",
+					function: ordersDetailsHandler,
+				},
+				{
 					nodeName: "debts",
 					function: debtsHandler,
 				},

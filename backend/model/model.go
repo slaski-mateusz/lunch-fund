@@ -28,16 +28,16 @@ type Order struct {
 	Id           int64  `json:"id"`
 	OrderName    string `json:"order_name"`
 	Timestamp    int64  `json:"timestamp"`
-	FounderId    int64  `json:"founder_id"`
 	DeliveryCost Money  `json:"delivery_cost"`
 	TipCost      Money  `json:"tip_cost"`
 }
 
 type OrderDetail struct {
 	Team
-	OrderId  int64 `json:"order_id"`
-	MemberId int64 `json:"member_id"`
-	Amount   Money `json:"amount"`
+	OrderId   int64 `json:"order_id"`
+	MemberId  int64 `json:"member_id"`
+	IsFounder int64 `json:"is_founder"`
+	Amount    Money `json:"amount"`
 }
 
 type Debt struct {

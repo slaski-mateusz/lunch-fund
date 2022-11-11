@@ -11,7 +11,9 @@ import (
 
 func ListMembers(teamName string) ([]model.Member, error) {
 	errCon := connectDB(teamName)
-	if errCon == nil {
+	if errCon != nil {
+		return nil, errCon
+	} else {
 		dbinst := ConnectedDatabases[teamName]
 		query := dbCrudQueries.listMembersQ
 		dbCursor, errPre := dbinst.Prepare(query)
@@ -43,12 +45,13 @@ func ListMembers(teamName string) ([]model.Member, error) {
 		}
 		return members, nil
 	}
-	return nil, errors.New("Unknown problem when getting members from database")
 }
 
 func AddMember(newMember model.Member) error {
 	errCon := connectDB(newMember.TeamName)
-	if errCon == nil {
+	if errCon != nil {
+		return errCon
+	} else {
 		dbinst := ConnectedDatabases[newMember.TeamName]
 		_, errExe := dbinst.Exec(
 			dbCrudQueries.addMemberQ,
@@ -63,12 +66,13 @@ func AddMember(newMember model.Member) error {
 		}
 		return nil
 	}
-	return errors.New("Unknown problem when adding member to database")
 }
 
 func UpdateMember(memberData model.Member) error {
 	errCon := connectDB((memberData.TeamName))
-	if errCon == nil {
+	if errCon != nil {
+		return errCon
+	} else {
 		dbinst := ConnectedDatabases[memberData.TeamName]
 		_, errExe := dbinst.Exec(
 			dbCrudQueries.updateMemberQ,
@@ -84,12 +88,13 @@ func UpdateMember(memberData model.Member) error {
 		}
 		return nil
 	}
-	return errors.New("Unknown problem when updating member in database")
 }
 
 func DeleteMember(deleteMember model.Member) error {
 	errCon := connectDB(deleteMember.TeamName)
-	if errCon == nil {
+	if errCon != nil {
+		return errCon
+	} else {
 		dbinst := ConnectedDatabases[deleteMember.TeamName]
 		row := dbinst.QueryRow(
 			dbCrudQueries.checkIfMemberExistQ,
@@ -113,5 +118,4 @@ func DeleteMember(deleteMember model.Member) error {
 			return nil
 		}
 	}
-	return errors.New("Unknown problem when delete member from database")
 }

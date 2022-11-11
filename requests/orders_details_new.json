@@ -1,0 +1,7 @@
+{
+    "team_name": $teamname,
+    "order_id": $orderid,
+    "member_id": $memberid,
+    "is_founder": $founder,
+    "amount": $amount
+}

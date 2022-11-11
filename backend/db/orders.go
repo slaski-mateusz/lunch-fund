@@ -11,7 +11,9 @@ import (
 
 func ListOrders(teamName string) ([]model.Order, error) {
 	errCon := connectDB(teamName)
-	if errCon == nil {
+	if errCon != nil {
+		return nil, errCon
+	} else {
 		dbinst := ConnectedDatabases[teamName]
 		query := dbCrudQueries.listOrdersQ
 		dbCursor, errPre := dbinst.Prepare(query)
@@ -32,7 +34,6 @@ func ListOrders(teamName string) ([]model.Order, error) {
 				&recorder.Id,
 				&recorder.OrderName,
 				&recorder.Timestamp,
-				&recorder.FounderId,
 				&recorder.DeliveryCost,
 				&recorder.TipCost,
 			)
@@ -45,18 +46,18 @@ func ListOrders(teamName string) ([]model.Order, error) {
 		}
 		return orders, nil
 	}
-	return nil, errors.New("Unknown problem when getting members from database")
 }
 
 func AddOrder(newOrder model.Order) error {
 	errCon := connectDB(newOrder.TeamName)
-	if errCon == nil {
+	if errCon != nil {
+		return errCon
+	} else {
 		dbinst := ConnectedDatabases[newOrder.TeamName]
 		_, errExe := dbinst.Exec(
 			dbCrudQueries.addOrderQ,
 			newOrder.OrderName,
 			newOrder.Timestamp,
-			newOrder.FounderId,
 			newOrder.DeliveryCost,
 			newOrder.TipCost,
 		)
@@ -65,18 +66,18 @@ func AddOrder(newOrder model.Order) error {
 		}
 		return nil
 	}
-	return errors.New("Unknown problem when adding order to database")
 }
 
 func UpdateOrder(orderData model.Order) error {
 	errCon := connectDB((orderData.TeamName))
-	if errCon == nil {
+	if errCon != nil {
+		return errCon
+	} else {
 		dbinst := ConnectedDatabases[orderData.TeamName]
 		_, errExe := dbinst.Exec(
 			dbCrudQueries.updateOrderQ,
 			orderData.OrderName,
 			orderData.Timestamp,
-			orderData.FounderId,
 			orderData.DeliveryCost,
 			orderData.TipCost,
 			orderData.Id,
@@ -86,12 +87,13 @@ func UpdateOrder(orderData model.Order) error {
 		}
 		return nil
 	}
-	return errors.New("Unknown problem when updating member in database")
 }
 
 func DeleteOrder(deletedOrder model.Order) error {
 	errCon := connectDB(deletedOrder.TeamName)
-	if errCon == nil {
+	if errCon != nil {
+		return errCon
+	} else {
 		dbinst := ConnectedDatabases[deletedOrder.TeamName]
 		row := dbinst.QueryRow(
 			dbCrudQueries.checkIfOrderExistQ,
@@ -115,5 +117,4 @@ func DeleteOrder(deletedOrder model.Order) error {
 			return nil
 		}
 	}
-	return errors.New("Unknown problem when delete member from database")
 }

@@ -18,7 +18,7 @@ func ordersDetailsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
 		}
 		if orderDetailsRequest.TeamName == "" {
-			http.Error(resWri, "Team name can not to be emty!", http.StatusBadRequest)
+			http.Error(resWri, "API says: Team name can not to be emty!", http.StatusBadRequest)
 			return
 		}
 		orders, errOrd := db.ListOrdersDetails(
@@ -32,7 +32,10 @@ func ordersDetailsHandler(resWri http.ResponseWriter, requ *http.Request) {
 		json.NewEncoder(resWri).Encode(orders)
 		return
 	case http.MethodPut:
+
 	case http.MethodPost:
+
 	case http.MethodDelete:
+
 	}
 }

@@ -11,6 +11,7 @@ import (
 func ordersHandler(resWri http.ResponseWriter, requ *http.Request) {
 	switch requ.Method {
 	case http.MethodGet:
+		// Listing orders
 		var teamData model.Team
 		errDecode := json.NewDecoder(requ.Body).Decode(&teamData)
 		if errDecode != nil {
@@ -30,6 +31,7 @@ func ordersHandler(resWri http.ResponseWriter, requ *http.Request) {
 		return
 
 	case http.MethodPut:
+		// New order
 		var newOrderData model.Order
 		errDecode := json.NewDecoder(requ.Body).Decode(&newOrderData)
 		if errDecode != nil {
@@ -49,6 +51,7 @@ func ordersHandler(resWri http.ResponseWriter, requ *http.Request) {
 		return
 
 	case http.MethodPost:
+		// Update order
 		var updatedOrderData model.Order
 		errDecode := json.NewDecoder(requ.Body).Decode(&updatedOrderData)
 		if errDecode != nil {

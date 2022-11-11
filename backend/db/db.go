@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -54,6 +55,14 @@ func connectDB(teamName string) error {
 				return err
 			}
 		}
+	} else {
+		return errors.New(
+			fmt.Sprintf(
+				"No database file '%v' for team '%v'",
+				dbFilePath,
+				teamName,
+			),
+		)
 	}
 	return nil
 
