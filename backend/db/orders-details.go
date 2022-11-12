@@ -1,6 +1,8 @@
 package db
 
 import (
+	"errors"
+
 	"github.com/slaski-mateusz/lunch-fund/backend/model"
 )
 
@@ -35,4 +37,32 @@ func ListOrdersDetails(teamName string, orderId int64) ([]model.OrderDetail, err
 		}
 		return ordersDetails, nil
 	}
+}
+
+func AddOrderDetail(newOrderDetail model.OrderDetail) error {
+	errCon := connectDB(newOrderDetail.TeamName)
+	if errCon != nil {
+		return errCon
+	} else {
+		dbinst := ConnectedDatabases[newOrderDetail.TeamName]
+		_, errExe := dbinst.Exec(
+			dbCrudQueries.addOrderDetailsQ,
+			newOrderDetail.OrderId,
+			newOrderDetail.MemberId,
+			newOrderDetail.IsFounder,
+			newOrderDetail.Amount,
+		)
+		if errExe != nil {
+			return errExe
+		}
+		return nil
+	}
+}
+
+func UpdateOrderDetail(orderDetailData model.OrderDetail) error {
+	return errors.New("Adding orders detail not implemented in database yet")
+}
+
+func DeleteOrderDetail(orderDetailData model.OrderDetail) error {
+	return errors.New("Adding orders detail not implemented in database yet")
 }

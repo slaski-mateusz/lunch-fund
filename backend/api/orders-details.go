@@ -12,27 +12,70 @@ import (
 func ordersDetailsHandler(resWri http.ResponseWriter, requ *http.Request) {
 	switch requ.Method {
 	case http.MethodGet:
-		var orderDetailsRequest model.Order
-		errDecode := json.NewDecoder(requ.Body).Decode(&orderDetailsRequest)
+		// Listing ordrt details for selected order id
+		var ordersDetailsRequest model.Order
+		errDecode := json.NewDecoder(requ.Body).Decode(&ordersDetailsRequest)
 		if errDecode != nil {
-			http.Error(resWri, errDecode.Error(), http.StatusBadRequest)
+			http.Error(
+				resWri,
+				errDecode.Error(),
+				http.StatusBadRequest,
+			)
+			return
 		}
-		if orderDetailsRequest.TeamName == "" {
-			http.Error(resWri, "API says: Team name can not to be emty!", http.StatusBadRequest)
+		if ordersDetailsRequest.TeamName == "" {
+			http.Error(
+				resWri,
+				"API says: Team name can not to be emty!",
+				http.StatusBadRequest,
+			)
 			return
 		}
 		orders, errOrd := db.ListOrdersDetails(
-			orderDetailsRequest.TeamName,
-			orderDetailsRequest.Id,
+			ordersDetailsRequest.TeamName,
+			ordersDetailsRequest.Id,
 		)
 		if errOrd != nil {
-			http.Error(resWri, errOrd.Error(), http.StatusBadRequest)
+			http.Error(
+				resWri,
+				errOrd.Error(),
+				http.StatusBadRequest,
+			)
 			return
 		}
 		json.NewEncoder(resWri).Encode(orders)
 		return
 	case http.MethodPut:
-
+		// Adding new single order detail
+		var newOrderDetail model.OrderDetail
+		errDecode := json.NewDecoder(requ.Body).Decode(&newOrderDetail)
+		if errDecode != nil {
+			http.Error(
+				resWri,
+				errDecode.Error(),
+				http.StatusBadRequest,
+			)
+			return
+		}
+		if newOrderDetail.TeamName == "" {
+			http.Error(
+				resWri,
+				"Team name can not to be emty!",
+				http.StatusBadRequest,
+			)
+			return
+		}
+		errAdd := db.AddOrderDetail(newOrderDetail)
+		if errAdd != nil {
+			http.Error(
+				resWri,
+				errAdd.Error(),
+				http.StatusBadRequest,
+			)
+			return
+		}
+		resWri.Write([]byte("Order detail added"))
+		return
 	case http.MethodPost:
 
 	case http.MethodDelete:

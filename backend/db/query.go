@@ -60,7 +60,7 @@ var dbCrudQueries = struct {
 	updateOrderQ:        `UPDATE orders SET order_name=?, timestamp=?, founder_id=?, delivery_cost=?, tip_cost=? WHERE id=?`,
 	deleteOrderQ:        `DELETE FROM orders WHERE id=?`,
 	listOrdersQ:         `SELECT * FROM orders;`,
-	addOrderDetailsQ:    ``,
+	addOrderDetailsQ:    `INSERT INTO orders_details (order_id, member_id, is_founder, amount) VALUES (?, ?, ?, ?);`,
 	updateOrderDetailsQ: ``,
 	deleteOrderDetailsQ: ``,
 	listOrdersDetailsQ:  `SELECT * FROM orders_details WHERE order_id=?;`,
