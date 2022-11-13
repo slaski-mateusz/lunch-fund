@@ -21,6 +21,7 @@ var dbInitQueries = map[string]string{
 		member_id INTEGER NOT NULL,
 		is_founder INTEGER NOT NULL,
 		amount INTEGER NOT NULL,
+		PRIMARY KEY (order_id, member_id),
 		FOREIGN KEY (order_id) REFERENCES orders (id) ON UPDATE CASCADE ON DELETE RESTRICT,
 		FOREIGN KEY (member_id) REFERENCES members (id) ON UPDATE CASCADE ON DELETE RESTRICT)`,
 	"createTableDebts": `CREATE TABLE IF NOT EXISTS debts (
@@ -33,7 +34,6 @@ var dbInitQueries = map[string]string{
 }
 
 var dbCrudQueries = struct {
-	add1stAdminQ        string
 	addMemberQ          string
 	checkIfMemberExistQ string
 	updateMemberQ       string
@@ -49,7 +49,6 @@ var dbCrudQueries = struct {
 	deleteOrderDetailsQ string
 	listOrdersDetailsQ  string
 }{
-	add1stAdminQ:        ``,
 	addMemberQ:          `INSERT INTO members (member_name, email, phone, is_admin, is_active) VALUES (?, ?, ?, ?, ?);`,
 	checkIfMemberExistQ: `SELECT id FROM members WHERE id=?`,
 	updateMemberQ:       `UPDATE members SET member_name=?, email=?, phone=?, is_admin=?, is_active=? WHERE id=?`,
@@ -61,7 +60,7 @@ var dbCrudQueries = struct {
 	deleteOrderQ:        `DELETE FROM orders WHERE id=?`,
 	listOrdersQ:         `SELECT * FROM orders;`,
 	addOrderDetailsQ:    `INSERT INTO orders_details (order_id, member_id, is_founder, amount) VALUES (?, ?, ?, ?);`,
-	updateOrderDetailsQ: ``,
-	deleteOrderDetailsQ: ``,
+	updateOrderDetailsQ: `UPDATE orders_details SET order_id=?, member_id=?, is_founder=?, amount=? WHERE order_id=? AND member_id=?`,
+	deleteOrderDetailsQ: `DELETE FROM orders_details WHERE order_id=? AND member_id=?`,
 	listOrdersDetailsQ:  `SELECT * FROM orders_details WHERE order_id=?;`,
 }
