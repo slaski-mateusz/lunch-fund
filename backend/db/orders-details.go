@@ -60,9 +60,33 @@ func AddOrderDetail(newOrderDetail model.OrderDetail) error {
 }
 
 func UpdateOrderDetail(orderDetailData model.OrderDetail) error {
-	return errors.New("Adding orders detail not implemented in database yet")
+	errCon := connectDB(orderDetailData.TeamName)
+	if errCon != nil {
+		return errCon
+	} else {
+		dbinst := ConnectedDatabases[orderDetailData.TeamName]
+		_, errExe := dbinst.Exec(
+			dbCrudQueries.updateOrderDetailsQ,
+			orderDetailData.OrderId,
+			orderDetailData.MemberId,
+			orderDetailData.IsFounder,
+			orderDetailData.Amount,
+			orderDetailData.OrderId,
+			orderDetailData.MemberId,
+		)
+		if errExe != nil {
+			return errExe
+		}
+		return nil
+	}
 }
 
 func DeleteOrderDetail(orderDetailData model.OrderDetail) error {
+	// errCon := connectDB(orderDetailData.TeamName)
+	// if errCon != nil {
+	// 	return errCon
+	// } else {
+	// 	dbinst := ConnectedDatabases[orderDetailData.TeamName]
+	// }
 	return errors.New("Adding orders detail not implemented in database yet")
 }
