@@ -34,33 +34,35 @@ var dbInitQueries = map[string]string{
 }
 
 var dbCrudQueries = struct {
-	addMemberQ          string
-	checkIfMemberExistQ string
-	updateMemberQ       string
-	deleteMemberQ       string
-	listMembersQ        string
-	addOrderQ           string
-	checkIfOrderExistQ  string
-	updateOrderQ        string
-	deleteOrderQ        string
-	listOrdersQ         string
-	addOrderDetailsQ    string
-	updateOrderDetailsQ string
-	deleteOrderDetailsQ string
-	listOrdersDetailsQ  string
+	addMemberQ               string
+	checkIfMemberExistQ      string
+	updateMemberQ            string
+	deleteMemberQ            string
+	listMembersQ             string
+	addOrderQ                string
+	checkIfOrderExistQ       string
+	updateOrderQ             string
+	deleteOrderQ             string
+	listOrdersQ              string
+	addOrderDetailsQ         string
+	updateOrderDetailsQ      string
+	checkIfOrderDetailExistQ string
+	deleteOrderDetailQ       string
+	listOrdersDetailsQ       string
 }{
-	addMemberQ:          `INSERT INTO members (member_name, email, phone, is_admin, is_active) VALUES (?, ?, ?, ?, ?);`,
-	checkIfMemberExistQ: `SELECT id FROM members WHERE id=?`,
-	updateMemberQ:       `UPDATE members SET member_name=?, email=?, phone=?, is_admin=?, is_active=? WHERE id=?`,
-	deleteMemberQ:       `DELETE FROM members WHERE id=?`,
-	listMembersQ:        `SELECT * FROM members;`,
-	addOrderQ:           `INSERT INTO orders (order_name, timestamp, founder_id, delivery_cost, tip_cost) VALUES (?, ?, ?, ?, ?);`,
-	checkIfOrderExistQ:  `SELECT id FROM orders WHERE id=?`,
-	updateOrderQ:        `UPDATE orders SET order_name=?, timestamp=?, founder_id=?, delivery_cost=?, tip_cost=? WHERE id=?`,
-	deleteOrderQ:        `DELETE FROM orders WHERE id=?`,
-	listOrdersQ:         `SELECT * FROM orders;`,
-	addOrderDetailsQ:    `INSERT INTO orders_details (order_id, member_id, is_founder, amount) VALUES (?, ?, ?, ?);`,
-	updateOrderDetailsQ: `UPDATE orders_details SET order_id=?, member_id=?, is_founder=?, amount=? WHERE order_id=? AND member_id=?`,
-	deleteOrderDetailsQ: `DELETE FROM orders_details WHERE order_id=? AND member_id=?`,
-	listOrdersDetailsQ:  `SELECT * FROM orders_details WHERE order_id=?;`,
+	addMemberQ:               `INSERT INTO members (member_name, email, phone, is_admin, is_active) VALUES (?, ?, ?, ?, ?);`,
+	checkIfMemberExistQ:      `SELECT id FROM members WHERE id=?`,
+	updateMemberQ:            `UPDATE members SET member_name=?, email=?, phone=?, is_admin=?, is_active=? WHERE id=?`,
+	deleteMemberQ:            `DELETE FROM members WHERE id=?`,
+	listMembersQ:             `SELECT * FROM members;`,
+	addOrderQ:                `INSERT INTO orders (order_name, timestamp, founder_id, delivery_cost, tip_cost) VALUES (?, ?, ?, ?, ?);`,
+	checkIfOrderExistQ:       `SELECT id FROM orders WHERE id=?`,
+	updateOrderQ:             `UPDATE orders SET order_name=?, timestamp=?, founder_id=?, delivery_cost=?, tip_cost=? WHERE id=?`,
+	deleteOrderQ:             `DELETE FROM orders WHERE id=?`,
+	listOrdersQ:              `SELECT * FROM orders;`,
+	addOrderDetailsQ:         `INSERT INTO orders_details (order_id, member_id, is_founder, amount) VALUES (?, ?, ?, ?);`,
+	updateOrderDetailsQ:      `UPDATE orders_details SET order_id=?, member_id=?, is_founder=?, amount=? WHERE order_id=? AND member_id=?`,
+	checkIfOrderDetailExistQ: `SELECT order_id, member_id FROM orders_details WHERE order_id=? AND member_id=?`,
+	deleteOrderDetailQ:       `DELETE FROM orders_details WHERE order_id=? AND member_id=?`,
+	listOrdersDetailsQ:       `SELECT * FROM orders_details WHERE order_id=?;`,
 }

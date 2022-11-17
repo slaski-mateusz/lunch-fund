@@ -1,6 +1,7 @@
 package db
 
 import (
+	"database/sql"
 	"errors"
 
 	"github.com/slaski-mateusz/lunch-fund/backend/model"
@@ -81,12 +82,38 @@ func UpdateOrderDetail(orderDetailData model.OrderDetail) error {
 	}
 }
 
-func DeleteOrderDetail(orderDetailData model.OrderDetail) error {
-	// errCon := connectDB(orderDetailData.TeamName)
-	// if errCon != nil {
-	// 	return errCon
-	// } else {
-	// 	dbinst := ConnectedDatabases[orderDetailData.TeamName]
-	// }
+func DeleteOrderDetail(orderDetailToDelete model.OrderDetail) error {
+	errCon := connectDB(orderDetailToDelete.TeamName)
+	if errCon != nil {
+		return errCon
+	} else {
+		dbinst := ConnectedDatabases[orderDetailToDelete.TeamName]
+		row := dbinst.QueryRow(
+			dbCrudQueries.checkIfOrderDetailExistQ,
+			orderDetailToDelete.OrderId,
+			orderDetailToDelete.MemberId,
+		)
+		errQuer := row.Scan(
+			&orderDetailToDelete.OrderId,
+			&orderDetailToDelete.MemberId,
+		)
+		if errQuer != nil {
+			if errQuer == sql.ErrNoRows {
+				return errors.New("No such order detail in database")
+			} else {
+				return errQuer
+			}
+		} else {
+			_, errExe := dbinst.Exec(
+				dbCrudQueries.deleteOrderDetailQ,
+				orderDetailToDelete.OrderId,
+				orderDetailToDelete.MemberId
+			)
+			if errExe != nil {
+				return errExe
+			}
+			return nil
+		}
+	}
 	return errors.New("Adding orders detail not implemented in database yet")
 }
