@@ -107,7 +107,7 @@ func DeleteOrderDetail(orderDetailToDelete model.OrderDetail) error {
 			_, errExe := dbinst.Exec(
 				dbCrudQueries.deleteOrderDetailQ,
 				orderDetailToDelete.OrderId,
-				orderDetailToDelete.MemberId
+				orderDetailToDelete.MemberId,
 			)
 			if errExe != nil {
 				return errExe
@@ -115,5 +115,4 @@ func DeleteOrderDetail(orderDetailToDelete model.OrderDetail) error {
 			return nil
 		}
 	}
-	return errors.New("Adding orders detail not implemented in database yet")
 }
