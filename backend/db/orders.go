@@ -15,7 +15,7 @@ func ListOrders(teamName string) ([]model.Order, error) {
 		return nil, errCon
 	} else {
 		dbinst := ConnectedDatabases[teamName]
-		query := dbCrudQueries.listOrdersQ
+		query := dbCrudQueries.ordersListQ
 		dbCursor, errPre := dbinst.Prepare(query)
 		if errPre != nil {
 			return nil, errPre
@@ -55,7 +55,7 @@ func AddOrder(newOrder model.Order) error {
 	} else {
 		dbinst := ConnectedDatabases[newOrder.TeamName]
 		_, errExe := dbinst.Exec(
-			dbCrudQueries.addOrderQ,
+			dbCrudQueries.orderAddQ,
 			newOrder.OrderName,
 			newOrder.Timestamp,
 			newOrder.DeliveryCost,
@@ -75,7 +75,7 @@ func UpdateOrder(orderData model.Order) error {
 	} else {
 		dbinst := ConnectedDatabases[orderData.TeamName]
 		_, errExe := dbinst.Exec(
-			dbCrudQueries.updateOrderQ,
+			dbCrudQueries.orderUpdateQ,
 			orderData.OrderName,
 			orderData.Timestamp,
 			orderData.DeliveryCost,
@@ -96,7 +96,7 @@ func DeleteOrder(deletedOrder model.Order) error {
 	} else {
 		dbinst := ConnectedDatabases[deletedOrder.TeamName]
 		row := dbinst.QueryRow(
-			dbCrudQueries.checkIfOrderExistQ,
+			dbCrudQueries.orderCheckIfExistQ,
 			deletedOrder.Id,
 		)
 		errQuer := row.Scan(&deletedOrder.Id)
@@ -108,7 +108,7 @@ func DeleteOrder(deletedOrder model.Order) error {
 			}
 		} else {
 			_, errExe := dbinst.Exec(
-				dbCrudQueries.deleteOrderQ,
+				dbCrudQueries.orderDeleteQ,
 				deletedOrder.Id,
 			)
 			if errExe != nil {

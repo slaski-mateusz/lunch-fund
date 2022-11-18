@@ -50,7 +50,10 @@ func connectDB(teamName string) error {
 		}
 		if ConnectedDatabases[teamName] == nil {
 			var err error
-			ConnectedDatabases[teamName], err = sql.Open(dbEngine, dbFilePath)
+			ConnectedDatabases[teamName], err = sql.Open(
+				dbEngine,
+				"file:"+dbFilePath+"?_foreign_keys=true",
+			)
 			if err != nil {
 				return err
 			}

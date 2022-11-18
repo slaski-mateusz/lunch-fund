@@ -15,7 +15,7 @@ func ListMembers(teamName string) ([]model.Member, error) {
 		return nil, errCon
 	} else {
 		dbinst := ConnectedDatabases[teamName]
-		query := dbCrudQueries.listMembersQ
+		query := dbCrudQueries.membersListQ
 		dbCursor, errPre := dbinst.Prepare(query)
 		if errPre != nil {
 			return nil, errPre
@@ -54,7 +54,7 @@ func AddMember(newMember model.Member) error {
 	} else {
 		dbinst := ConnectedDatabases[newMember.TeamName]
 		_, errExe := dbinst.Exec(
-			dbCrudQueries.addMemberQ,
+			dbCrudQueries.memberAddQ,
 			newMember.MemberName,
 			newMember.Email,
 			newMember.Phone,
@@ -75,7 +75,7 @@ func UpdateMember(memberData model.Member) error {
 	} else {
 		dbinst := ConnectedDatabases[memberData.TeamName]
 		_, errExe := dbinst.Exec(
-			dbCrudQueries.updateMemberQ,
+			dbCrudQueries.memberUpdateQ,
 			memberData.MemberName,
 			memberData.Email,
 			memberData.Phone,
@@ -97,7 +97,7 @@ func DeleteMember(deleteMember model.Member) error {
 	} else {
 		dbinst := ConnectedDatabases[deleteMember.TeamName]
 		row := dbinst.QueryRow(
-			dbCrudQueries.checkIfMemberExistQ,
+			dbCrudQueries.memberCheckIfExistQ,
 			deleteMember.Id,
 		)
 		errQuer := row.Scan(&deleteMember.Id)
@@ -109,7 +109,7 @@ func DeleteMember(deleteMember model.Member) error {
 			}
 		} else {
 			_, errExe := dbinst.Exec(
-				dbCrudQueries.deleteMemberQ,
+				dbCrudQueries.memberDeleteMQ,
 				deleteMember.Id,
 			)
 			if errExe != nil {

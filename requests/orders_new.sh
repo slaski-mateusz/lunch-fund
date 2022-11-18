@@ -10,7 +10,6 @@ BODY=$( jq -n \
 --arg teamname "$teamname" \
 --arg ordername "$ordername" \
 --argjson timestamp "$timestamp" \
---argjson founderid "$founderid" \
 --argjson deliverycost "$deliverycost" \
 --argjson tipcost "$tipcost" \
 "$BODY_TEMPLATE"\

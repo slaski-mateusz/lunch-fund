@@ -13,8 +13,9 @@ func ListOrdersDetails(teamName string, orderId int64) ([]model.OrderDetail, err
 		return nil, errCon
 	} else {
 		dbinst := ConnectedDatabases[teamName]
-		query := dbCrudQueries.listOrdersDetailsQ
-		dbCursor, errPre := dbinst.Prepare(query)
+		dbCursor, errPre := dbinst.Prepare(
+			dbCrudQueries.ordersDetailsListQ,
+		)
 		if errPre != nil {
 			return nil, errPre
 		}
@@ -29,6 +30,7 @@ func ListOrdersDetails(teamName string, orderId int64) ([]model.OrderDetail, err
 			errNx := data.Scan(
 				&recDetail.OrderId,
 				&recDetail.MemberId,
+				&recDetail.IsFounder,
 				&recDetail.Amount,
 			)
 			if errNx != nil {
@@ -47,7 +49,7 @@ func AddOrderDetail(newOrderDetail model.OrderDetail) error {
 	} else {
 		dbinst := ConnectedDatabases[newOrderDetail.TeamName]
 		_, errExe := dbinst.Exec(
-			dbCrudQueries.addOrderDetailsQ,
+			dbCrudQueries.orderDetailsAddQ,
 			newOrderDetail.OrderId,
 			newOrderDetail.MemberId,
 			newOrderDetail.IsFounder,
@@ -67,7 +69,7 @@ func UpdateOrderDetail(orderDetailData model.OrderDetail) error {
 	} else {
 		dbinst := ConnectedDatabases[orderDetailData.TeamName]
 		_, errExe := dbinst.Exec(
-			dbCrudQueries.updateOrderDetailsQ,
+			dbCrudQueries.orderDetailsUpdateQ,
 			orderDetailData.OrderId,
 			orderDetailData.MemberId,
 			orderDetailData.IsFounder,
@@ -89,7 +91,7 @@ func DeleteOrderDetail(orderDetailToDelete model.OrderDetail) error {
 	} else {
 		dbinst := ConnectedDatabases[orderDetailToDelete.TeamName]
 		row := dbinst.QueryRow(
-			dbCrudQueries.checkIfOrderDetailExistQ,
+			dbCrudQueries.orderDetailCheckIfExistQ,
 			orderDetailToDelete.OrderId,
 			orderDetailToDelete.MemberId,
 		)
@@ -105,7 +107,7 @@ func DeleteOrderDetail(orderDetailToDelete model.OrderDetail) error {
 			}
 		} else {
 			_, errExe := dbinst.Exec(
-				dbCrudQueries.deleteOrderDetailQ,
+				dbCrudQueries.orderDetailDeleteQ,
 				orderDetailToDelete.OrderId,
 				orderDetailToDelete.MemberId,
 			)

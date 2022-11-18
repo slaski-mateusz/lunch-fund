@@ -18,7 +18,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			return
 		}
 		if teamData.TeamName == "" {
-			http.Error(resWri, "Team name can not to be emty!", http.StatusBadRequest)
+			http.Error(resWri, "Team name can not to be emty!\n", http.StatusBadRequest)
 			return
 		}
 		members, errMb := db.ListMembers(teamData.TeamName)
@@ -37,7 +37,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			return
 		}
 		if newMembererData.TeamName == "" {
-			http.Error(resWri, "Team name can not to be emty!", http.StatusBadRequest)
+			http.Error(resWri, "Team name can not to be emty!\n", http.StatusBadRequest)
 			return
 		}
 		errAdd := db.AddMember(newMembererData)
@@ -45,7 +45,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			http.Error(resWri, errAdd.Error(), http.StatusBadRequest)
 			return
 		}
-		resWri.Write([]byte("Member added"))
+		resWri.Write([]byte("Member added\n"))
 		return
 
 	case http.MethodPost:
@@ -56,7 +56,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			return
 		}
 		if updatedMembererData.TeamName == "" {
-			http.Error(resWri, "Team name can not to be emty!", http.StatusBadRequest)
+			http.Error(resWri, "Team name can not to be emty!\n", http.StatusBadRequest)
 			return
 		}
 		errUpd := db.UpdateMember(updatedMembererData)
@@ -64,7 +64,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			http.Error(resWri, errUpd.Error(), http.StatusBadRequest)
 			return
 		}
-		resWri.Write([]byte("Member updated"))
+		resWri.Write([]byte("Member updated\n"))
 		return
 
 	case http.MethodDelete:
@@ -75,7 +75,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			return
 		}
 		if deletedMenberData.TeamName == "" {
-			http.Error(resWri, "Team name can not to be emty!", http.StatusBadRequest)
+			http.Error(resWri, "Team name can not to be emty!\n", http.StatusBadRequest)
 			return
 		}
 		errDel := db.DeleteMember(deletedMenberData)
@@ -83,7 +83,7 @@ func membersHandler(resWri http.ResponseWriter, requ *http.Request) {
 			http.Error(resWri, errDel.Error(), http.StatusBadRequest)
 			return
 		}
-		resWri.Write([]byte("Member deleted"))
+		resWri.Write([]byte("Member deleted\n"))
 		return
 	}
 }

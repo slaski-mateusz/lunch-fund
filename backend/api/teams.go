@@ -37,7 +37,7 @@ func teamsHandler(resWri http.ResponseWriter, requ *http.Request) {
 			} else {
 				http.Error(
 					resWri,
-					"Empty team name or no 'team' key in request body",
+					"Empty team name or no 'team' key in request body\n",
 					http.StatusBadRequest,
 				)
 			}

@@ -16,5 +16,5 @@ BODY=$( jq -n \
 echo "Request body:"
 echo $BODY
 
-curl -v -X GET -d "$BODY" "127.0.0.1:8080/api/orders_details/"
-# curl -v -X GET -d "$BODY" "127.0.0.1:8080/api/orders/" | jq .
+# curl -v -X GET -d "$BODY" "127.0.0.1:8080/api/orders_details/"
+curl -v -X GET -d "$BODY" "127.0.0.1:8080/api/orders_details/" | jq .

@@ -15,9 +15,20 @@ func InitTeamDatabase(teamName string) error {
 		TeamFilename(teamName),
 	)
 	if dbe, _ := DbExist(dbFilePath); !dbe {
-		database, err := sql.Open(dbEngine, dbFilePath)
+		database, errOp := sql.Open(
+			dbEngine,
+			"file:"+dbFilePath+"?_foreign_keys=true",
+		)
 		defer database.Close()
-		if err == nil {
+		if errOp == nil {
+			dbCursorP, errPreP := database.Prepare(activateForeginKeys)
+			if errPreP != nil {
+				return errPreP
+			}
+			_, errExeP := dbCursorP.Exec()
+			if errExeP != nil {
+				return errExeP
+			}
 			for _, initQuery := range dbInitQueries {
 				dbCursor, errPre := database.Prepare(initQuery)
 				if errPre != nil {
@@ -29,7 +40,7 @@ func InitTeamDatabase(teamName string) error {
 				}
 			}
 		} else {
-			return err
+			return errOp
 		}
 	}
 	return nil

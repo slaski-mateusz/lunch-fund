@@ -6,7 +6,6 @@ import (
 
 	"github.com/slaski-mateusz/lunch-fund/backend/db"
 	"github.com/slaski-mateusz/lunch-fund/backend/model"
-	// "github.com/slaski-mateusz/lunch-fund/backend/model"
 )
 
 func ordersDetailsHandler(resWri http.ResponseWriter, requ *http.Request) {

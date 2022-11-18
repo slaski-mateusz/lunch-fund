@@ -1,8 +1,10 @@
 package db
 
+var activateForeginKeys = "PRAGMA foreign_keys = ON;"
+
 var dbInitQueries = map[string]string{
-	"activateForeginKeys": "PRAGMA foreign_keys = ON;",
-	"createTableMembers": `CREATE TABLE IF NOT EXISTS members (
+	"createTableMembers": `
+	    CREATE TABLE IF NOT EXISTS members (
 		id INTEGER PRIMARY KEY,
 		member_name TEXT NOT NULL UNIQUE,
 		email TEXT NOT NULL UNIQUE,
@@ -34,35 +36,35 @@ var dbInitQueries = map[string]string{
 }
 
 var dbCrudQueries = struct {
-	addMemberQ               string
-	checkIfMemberExistQ      string
-	updateMemberQ            string
-	deleteMemberQ            string
-	listMembersQ             string
-	addOrderQ                string
-	checkIfOrderExistQ       string
-	updateOrderQ             string
-	deleteOrderQ             string
-	listOrdersQ              string
-	addOrderDetailsQ         string
-	updateOrderDetailsQ      string
-	checkIfOrderDetailExistQ string
-	deleteOrderDetailQ       string
-	listOrdersDetailsQ       string
+	memberAddQ               string
+	memberCheckIfExistQ      string
+	memberUpdateQ            string
+	memberDeleteMQ           string
+	membersListQ             string
+	orderAddQ                string
+	orderCheckIfExistQ       string
+	orderUpdateQ             string
+	orderDeleteQ             string
+	ordersListQ              string
+	orderDetailsAddQ         string
+	orderDetailsUpdateQ      string
+	orderDetailCheckIfExistQ string
+	orderDetailDeleteQ       string
+	ordersDetailsListQ       string
 }{
-	addMemberQ:               `INSERT INTO members (member_name, email, phone, is_admin, is_active) VALUES (?, ?, ?, ?, ?);`,
-	checkIfMemberExistQ:      `SELECT id FROM members WHERE id=?`,
-	updateMemberQ:            `UPDATE members SET member_name=?, email=?, phone=?, is_admin=?, is_active=? WHERE id=?`,
-	deleteMemberQ:            `DELETE FROM members WHERE id=?`,
-	listMembersQ:             `SELECT * FROM members;`,
-	addOrderQ:                `INSERT INTO orders (order_name, timestamp, founder_id, delivery_cost, tip_cost) VALUES (?, ?, ?, ?, ?);`,
-	checkIfOrderExistQ:       `SELECT id FROM orders WHERE id=?`,
-	updateOrderQ:             `UPDATE orders SET order_name=?, timestamp=?, founder_id=?, delivery_cost=?, tip_cost=? WHERE id=?`,
-	deleteOrderQ:             `DELETE FROM orders WHERE id=?`,
-	listOrdersQ:              `SELECT * FROM orders;`,
-	addOrderDetailsQ:         `INSERT INTO orders_details (order_id, member_id, is_founder, amount) VALUES (?, ?, ?, ?);`,
-	updateOrderDetailsQ:      `UPDATE orders_details SET order_id=?, member_id=?, is_founder=?, amount=? WHERE order_id=? AND member_id=?`,
-	checkIfOrderDetailExistQ: `SELECT order_id, member_id FROM orders_details WHERE order_id=? AND member_id=?`,
-	deleteOrderDetailQ:       `DELETE FROM orders_details WHERE order_id=? AND member_id=?`,
-	listOrdersDetailsQ:       `SELECT * FROM orders_details WHERE order_id=?;`,
+	memberAddQ:               `INSERT INTO members (member_name, email, phone, is_admin, is_active) VALUES (?, ?, ?, ?, ?);`,
+	memberCheckIfExistQ:      `SELECT id FROM members WHERE id=?`,
+	memberUpdateQ:            `UPDATE members SET member_name=?, email=?, phone=?, is_admin=?, is_active=? WHERE id=?`,
+	memberDeleteMQ:           `DELETE FROM members WHERE id=?`,
+	membersListQ:             `SELECT * FROM members;`,
+	orderAddQ:                `INSERT INTO orders (order_name, timestamp, delivery_cost, tip_cost) VALUES (?, ?, ?, ?);`,
+	orderCheckIfExistQ:       `SELECT id FROM orders WHERE id=?`,
+	orderUpdateQ:             `UPDATE orders SET order_name=?, timestamp=?, delivery_cost=?, tip_cost=? WHERE id=?`,
+	orderDeleteQ:             `DELETE FROM orders WHERE id=?`,
+	ordersListQ:              `SELECT * FROM orders;`,
+	orderDetailsAddQ:         `INSERT INTO orders_details (order_id, member_id, is_founder, amount) VALUES (?, ?, ?, ?);`,
+	orderDetailsUpdateQ:      `UPDATE orders_details SET order_id=?, member_id=?, is_founder=?, amount=? WHERE order_id=? AND member_id=?`,
+	orderDetailCheckIfExistQ: `SELECT order_id, member_id FROM orders_details WHERE order_id=? AND member_id=?`,
+	orderDetailDeleteQ:       `DELETE FROM orders_details WHERE order_id=? AND member_id=?`,
+	ordersDetailsListQ:       `SELECT * FROM orders_details WHERE order_id=?;`,
 }
