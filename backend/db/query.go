@@ -51,6 +51,8 @@ var dbCrudQueries = struct {
 	orderDetailCheckIfExistQ string
 	orderDetailDeleteQ       string
 	ordersDetailsListQ       string
+
+	orderSelectedListQ string
 }{
 	memberAddQ:               `INSERT INTO members (member_name, email, phone, is_admin, is_active) VALUES (?, ?, ?, ?, ?);`,
 	memberCheckIfExistQ:      `SELECT id FROM members WHERE id=?`,
@@ -67,4 +69,6 @@ var dbCrudQueries = struct {
 	orderDetailCheckIfExistQ: `SELECT order_id, member_id FROM orders_details WHERE order_id=? AND member_id=?`,
 	orderDetailDeleteQ:       `DELETE FROM orders_details WHERE order_id=? AND member_id=?`,
 	ordersDetailsListQ:       `SELECT * FROM orders_details WHERE order_id=?;`,
+
+	orderSelectedListQ: `select member_id, member_name, amount, is_founder from orders_details inner join members on orders_details.member_id=members.id where order_id=?;`,
 }
