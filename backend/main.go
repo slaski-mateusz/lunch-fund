@@ -45,7 +45,7 @@ func main() {
 		port int
 	}{
 		host: "127.0.0.1",
-		port: 8080,
+		port: 8088,
 	}
 	fmt.Println(fmt.Sprintf(
 		"Using %v directory as storage",

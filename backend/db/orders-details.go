@@ -14,7 +14,7 @@ func ListOrdersDetails(teamName string, orderId int64) ([]model.OrderDetail, err
 	} else {
 		dbinst := ConnectedDatabases[teamName]
 		dbCursor, errPre := dbinst.Prepare(
-			dbCrudQueries.ordersDetailsListQ,
+			dbCrudQueries.orderDetailsListQ,
 		)
 		if errPre != nil {
 			return nil, errPre

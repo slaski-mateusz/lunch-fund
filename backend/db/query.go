@@ -50,7 +50,7 @@ var dbCrudQueries = struct {
 	orderDetailsUpdateQ      string
 	orderDetailCheckIfExistQ string
 	orderDetailDeleteQ       string
-	ordersDetailsListQ       string
+	orderDetailsListQ        string
 
 	orderSelectedListQ string
 }{
@@ -68,7 +68,7 @@ var dbCrudQueries = struct {
 	orderDetailsUpdateQ:      `UPDATE orders_details SET order_id=?, member_id=?, is_founder=?, amount=? WHERE order_id=? AND member_id=?`,
 	orderDetailCheckIfExistQ: `SELECT order_id, member_id FROM orders_details WHERE order_id=? AND member_id=?`,
 	orderDetailDeleteQ:       `DELETE FROM orders_details WHERE order_id=? AND member_id=?`,
-	ordersDetailsListQ:       `SELECT * FROM orders_details WHERE order_id=?;`,
+	orderDetailsListQ:        `SELECT * FROM orders_details WHERE order_id=?;`,
 
 	orderSelectedListQ: `select member_id, member_name, amount, is_founder from orders_details inner join members on orders_details.member_id=members.id where order_id=?;`,
 }

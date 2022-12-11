@@ -1,0 +1,3 @@
+Go Webassembly frontend
+according to tutorial
+https://tutorialedge.net/golang/writing-frontend-web-framework-webassembly-go/
