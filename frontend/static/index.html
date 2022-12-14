@@ -3,14 +3,26 @@
 <head>
     <meta charset="utf-8" />
     <title>Lunch fund sharing application</title>
-    <script src="./static/wasm_exec.js"></script>
-    <script src="./static/entrypoint.js"></script>
+    <script src="wasm_exec.js"></script>
+    <script src="entrypoint.js"></script>
 </head>
 
 <body>
-    <div class="container">
+    <div>
         <h2>Lunch fund sharing application</h2>
     </div>
+    <div>
+        <label for="inputTeam">Select team</label>
+        <input id="inputTeam" name="TeamList" type="text">
+        <div id="outputTeam"></div>
+    </div>
+    <script>
+        var inputTeam = document.querySelector('#inputTeam')
+        var outputTeam = document.querySelector('#outputTeam')
+        inputTeam.addEventListener('keyup', function() {
+            outputTeam.innerHTML = listTeam(inputTeam.value)
+        })
+    </script>
 </body>
 
 </html>

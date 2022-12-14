@@ -1,22 +1,22 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
 
 var (
-	listenInterface = ":8080"
-	servedDir       = "."
+	listenInterface      = ":8080"
+	staticFilesDirectory = "./static"
 )
 
 func main() {
-	log.Fatal(
-		http.ListenAndServe(
-			*&listenInterface,
-			http.FileServer(
-				http.Dir(*&servedDir),
-			),
-		),
-	)
+	staticFiles := http.FileServer(http.Dir(staticFilesDirectory))
+	http.Handle("/", staticFiles)
+	fmt.Println(fmt.Sprintf("Listening on http://localhost%v/index.html", listenInterface))
+	err := http.ListenAndServe(listenInterface, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
