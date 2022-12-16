@@ -15,4 +15,4 @@ BODY=$( jq -n \
 echo $BODY
 
 # curl -v -X GET -d "$BODY" "127.0.0.1:8080/api/orders/"
-curl -v -X GET -d "$BODY" "127.0.0.1:8080/api/orders/" | jq .
+curl -v -X GET -d "$BODY" "$BACKEND_URL/api/orders/" | jq .

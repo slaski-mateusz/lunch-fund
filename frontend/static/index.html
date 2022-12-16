@@ -9,7 +9,11 @@
 
 <body>
     <div>
-        <h2>Lunch fund sharing application</h2>
+        <h1>Lunch fund sharing application</h1>
+    </div>
+    <div>
+        <h2>Teams list</h2>
+        <div id="list_all_teams"></div>
     </div>
     <div>
         <label for="inputTeam">Select team</label>
@@ -17,10 +21,11 @@
         <div id="outputTeam"></div>
     </div>
     <script>
+        
         var inputTeam = document.querySelector('#inputTeam')
         var outputTeam = document.querySelector('#outputTeam')
         inputTeam.addEventListener('keyup', function() {
-            outputTeam.innerHTML = listTeam(inputTeam.value)
+            outputTeam.innerHTML = listAllTeams(window.location.href)
         })
     </script>
 </body>

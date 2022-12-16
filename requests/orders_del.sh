@@ -5,6 +5,7 @@ source ./functions.sh
 parseOptions "$@"
 
 BODY_TEMPLATE=`loadBodyTemplate`
+BACKEND_URL=`cat backend.url`
 
 BODY=$( jq -n \
 --arg teamname "$teamname" \
@@ -14,4 +15,4 @@ BODY=$( jq -n \
 
 echo $BODY
 
-curl -v -X DELETE -d "$BODY" "127.0.0.1:8080/api/orders/"
+curl -v -X DELETE -d "$BODY" "$BACKEND_URL/api/orders/"

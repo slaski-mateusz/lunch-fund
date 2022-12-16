@@ -12,8 +12,9 @@ fi
 
 
 BODY_TEMPLATE=`cat teams_ren.json`
+BACKEND_URL=`cat backend.url`
 
 BODY=`echo $BODY_TEMPLATE | tr '\n' ' ' | sed s/\{\{OLDNAME\}\}/$OLDNAME/g | sed s/\{\{NEWNAME\}\}/$NEWNAME/g `
 echo $BODY
 
-curl -v -X POST -d "$BODY" "127.0.0.1:8080/teams/"
+curl -v -X POST -d "$BODY" "$BACKEND_URL/teams/"
