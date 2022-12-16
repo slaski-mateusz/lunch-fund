@@ -37,7 +37,7 @@ func backendUrl(inUrl js.Value) string {
 
 func listAllTeams(this js.Value, args []js.Value) interface{} {
 	cli := http.Client{Timeout: time.Duration(1) * time.Second}
-	fmt.Println(backendUrl(args[0]))
+	// fmt.Println(backendUrl(args[0]))
 	response, err := cli.Get(
 		fmt.Sprintf(
 			"%s/api/teams/",
@@ -54,11 +54,10 @@ func listAllTeams(this js.Value, args []js.Value) interface{} {
 
 func listTeamMembers(this js.Value, args []js.Value) interface{} {
 	cli := http.Client{Timeout: time.Duration(1) * time.Second}
-	backendUrl := args[0]
 	response, err := cli.Get(
 		fmt.Sprintf(
 			"%s/api/members/",
-			backendUrl,
+			backendUrl(args[0]),
 		),
 	)
 	if err != nil {
@@ -71,11 +70,10 @@ func listTeamMembers(this js.Value, args []js.Value) interface{} {
 
 func listTeamOrders(this js.Value, args []js.Value) interface{} {
 	cli := http.Client{Timeout: time.Duration(1) * time.Second}
-	backendUrl := args[0]
 	response, err := cli.Get(
 		fmt.Sprintf(
 			"%s/api/orders/",
-			backendUrl,
+			backendUrl(args[0]),
 		),
 	)
 	if err != nil {

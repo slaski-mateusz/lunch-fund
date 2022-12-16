@@ -4,7 +4,18 @@
     <meta charset="utf-8" />
     <title>Lunch fund sharing application</title>
     <script src="wasm_exec.js"></script>
-    <script src="entrypoint.js"></script>
+    <!-- <script src="entrypoint.js"></script> -->
+    <script>
+        const go = new Go();
+        WebAssembly.instantiateStreaming(
+            fetch("main.wasm"),
+            go.importObject
+        ).then(
+            result => {
+                go.run(result.instance)
+            }
+        )
+    </script>
 </head>
 
 <body>
@@ -15,18 +26,19 @@
         <h2>Teams list</h2>
         <div id="list_all_teams"></div>
     </div>
-    <div>
-        <label for="inputTeam">Select team</label>
-        <input id="inputTeam" name="TeamList" type="text">
+    <!-- <div>
+        <label for="team_selector">Select team</label>
+        <input id="team_output" name="TeamList" type="text">
         <div id="outputTeam"></div>
-    </div>
+    </div> -->
     <script>
-        
-        var inputTeam = document.querySelector('#inputTeam')
-        var outputTeam = document.querySelector('#outputTeam')
-        inputTeam.addEventListener('keyup', function() {
-            outputTeam.innerHTML = listAllTeams(window.location.href)
-        })
+        var teams_list = document.querySelector("#list_all_teams")
+        teams_list.innerHTML = listAllTeams(window.location.href)
+        // var input_team = document.querySelector('#team_selector')
+        // var output_team = document.querySelector('#team_output')
+        // input_team.addEventListener('keyup', function() {
+        //     output_team.innerHTML = listAllTeams(window.location.href)
+        // })
     </script>
 </body>
 
